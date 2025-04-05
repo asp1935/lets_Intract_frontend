@@ -167,7 +167,7 @@ const Home = () => {
           {/* Card 1 */}
           <div className="rounded-lg shadow-lg p-6 flex flex-col" style={{ backgroundImage: 'linear-gradient(-225deg, #E100FF, #7F00FF)', boxShadow: 'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset' }}>
             <div className="flex items-center justify-between mx-1 mt-2">
-              <img src="src/assets/total_users (6).png" alt="Total Users" className="h-18 w-18 mr-2" />
+              <img src="../../total_users (6).png" alt="Total Users" className="h-18 w-18 mr-2" />
               <div>
                 <h2 className="text-2xl font-bold text-white mb-2">Total Users</h2>
                 <p className="text-4xl font-bold text-yellow-500 text-center" style={{ textShadow: "3px 3px 10px rgba(80, 20, 56, 1)" }}>{counts.totalUser}</p>
@@ -192,7 +192,7 @@ const Home = () => {
           {/* Card 2 */}
           <div className="rounded-lg shadow-lg p-6 flex flex-col" style={{ backgroundImage: 'linear-gradient(-225deg, #ed6ea0 0%, #ec8c69 100%)', boxShadow: 'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset' }}>
             <div className="flex items-center justify-between mx-1 mt-2">
-              <img src="src/assets/business_user (2).png" alt="Total Users" className="h-20 w-19 mr-2" />
+              <img src="../../business_user (2).png" alt="Total Users" className="h-20 w-19 mr-2" />
               <div>
                 <h2 className="text-2xl font-bold text-white mb-2">Business</h2>
                 <p className="text-4xl font-bold text-yellow-500 text-center" style={{ textShadow: "3px 3px 10px rgba(80, 20, 56, 1)" }}>{counts.businessCount}</p>
@@ -217,7 +217,7 @@ const Home = () => {
           {/* Card 3 */}
           <div className="rounded-lg shadow-lg p-6 flex flex-col" style={{ backgroundImage: 'linear-gradient(-225deg, #4481eb 0%, #04befe 100%)', boxShadow: 'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset' }}>
             <div className="flex items-center justify-between mx-1 mt-2">
-              <img src="src/assets/politician_user (2).png" alt="Total Users" className="h-20 w-22 mr-2" />
+              <img src="../../politician_user (2).png" alt="Total Users" className="h-20 w-22 mr-2" />
               <div>
                 <h2 className="text-2xl font-bold text-white mb-2">Politician</h2>
                 <p className="text-4xl font-bold text-yellow-500 text-center" style={{ textShadow: "3px 3px 10px rgba(80, 20, 56, 1)" }}>{counts.politicalCount}</p>
@@ -298,7 +298,7 @@ const Home = () => {
           {/* Card 5 */}
           <div className="rounded-lg shadow-lg p-6 flex flex-col" style={{ backgroundImage: 'linear-gradient(-225deg, #06beb6, #48b1bf)', boxShadow: 'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset' }}>
             <div className="flex items-center justify-between mx-1 mt-2">
-              <img src="src/assets/associates (2).png" alt="Total Users" className="h-20 w-20 mr-2" />
+              <img src="../../associates (2).png" alt="Total Users" className="h-20 w-20 mr-2" />
               <div>
                 <p>Referenced by -</p>
                 <h2 className="text-2xl font-bold text-white mb-2">Associates</h2>
@@ -324,7 +324,7 @@ const Home = () => {
           {/* Card 6 */}
           <div className="rounded-lg shadow-lg p-6 flex flex-col" style={{ backgroundImage: 'linear-gradient(-225deg, #F2994A, #F2994A)', boxShadow: 'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset' }}>
             <div className="flex items-center justify-between mx-1 mt-2">
-              <img src="src/assets/staff.png" alt="Total Users" className="h-18 w-18 mr-2" />
+              <img src="../../staff.png" alt="Total Users" className="h-18 w-18 mr-2" />
               <div>
                 <p>Referenced by -</p>
                 <h2 className="text-2xl font-bold text-white mb-2">Staff</h2>
@@ -350,7 +350,7 @@ const Home = () => {
           {/* Card 1 */}
           <div className="rounded-lg shadow-lg p-6 flex flex-col" style={{ backgroundImage: 'linear-gradient(-225deg, #2f9933, #45B649)', boxShadow: 'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset' }}>
             <div className="flex items-center justify-between mx-1 mt-2">
-              <img src="src/assets/payout (2).png" alt="Total Users" className="h-20 w-18 mr-2 mt-3" />
+              <img src="../../payout (2).png" alt="Total Users" className="h-20 w-18 mr-2 mt-3" />
               <div>
                 <h2 className="text-2xl font-bold text-white mb-2">Payouts</h2>
                 <p className="text-4xl font-bold text-yellow-500" style={{ textShadow: "3px 3px 10px rgba(80, 20, 56, 1)" }}>300k</p>
@@ -375,7 +375,7 @@ const Home = () => {
           {/* Card 1 */}
           <div className="rounded-lg shadow-lg p-6 flex flex-col" style={{ backgroundImage: 'linear-gradient(-225deg, #2980b9, #2c3e50)', boxShadow: 'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset' }}>
             <div className="flex items-center justify-between mx-1 mt-2">
-              <img src="src/assets/total_sell.png" alt="Total Users" className="h-18 w-18 mr-2" />
+              <img src="../../total_sell.png" alt="Total Users" className="h-18 w-18 mr-2" />
               <div>
                 <h2 className="text-2xl font-bold text-white mb-2">Total Sell</h2>
                 <p className="text-4xl font-bold text-yellow-500" style={{ textShadow: "3px 3px 10px rgba(80, 20, 56, 1)" }}>800k</p>
