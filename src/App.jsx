@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import Sidebar from "./components/Sidebar";
 import AddPolitician from "./pages/AddPolitician";
 import MemberManagement from "./pages/MemberManagement";
 import PoliticianUpdation from "./pages/PoliticianUpdation";
@@ -41,7 +40,6 @@ import { setUserData } from "./redux/slice/UserSlice";
 import { ToastContainer } from 'react-toastify';
 import { showToast } from "./redux/slice/ToastSlice";
 import AccountReport from "./components/AccountReport";
-import CustomerPortfolio from "./components/CustomerPortfolio/CustomerPortfolio";
 import AddPortfolio from "./pages/AddPortfolio";
 import ManagePortfolio from "./pages/ManagePortfolio";
 
