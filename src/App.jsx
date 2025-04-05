@@ -31,7 +31,7 @@ import Enquiry from "./components/Enquiry";
 import Login from "./components/Login";
 
 import { Route, Routes, BrowserRouter, NavLink } from 'react-router';
-import Index from "./components";
+import Index from "./components/Index";
 import GuestRoute from "./components/RouterComponent/GuestRoute";
 import ProtededRoute from "./components/RouterComponent/ProtededRoute";
 import { useDispatch } from "react-redux";
