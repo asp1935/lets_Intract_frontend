@@ -1,0 +1,120 @@
+.navbar {
+    box-shadow: 0px 20px 20px -20px #640D5F;
+    background-image: linear-gradient(-225deg, #fb52c3 0%, #4f094b 100%);
+}
+
+.navbar button{
+    box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+    font-weight: bold;
+}
+
+.sidebar-container{
+    /* border-right: 5px solid #640D5F; */
+    /* box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px; */
+    box-shadow: 20px 0px 20px -20px #640D5F;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #2b0629;
+}
+
+.sidebar-container .transition-all{
+    font-weight: 500;
+    font-size: 16px;
+    
+}
+
+.sidebar_title{
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.Form{
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+.Form button{
+    box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+}
+
+/* Hide scrollbar for Chrome, Safari and Edge */
+.sidebar-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for Firefox */
+  .sidebar-container {
+    scrollbar-width: none;
+  }
+  
+  /* Ensure content remains scrollable */
+  .sidebar-container {
+    overflow-y: auto;
+  }
+  
+
+  /* customerUpdation */
+
+  /* Toggle Switch Styles */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 22px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 2px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #4caf50; /* Green when checked */
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 50px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  .permission_button button{
+    box-shadow: none;
+  }
+
+  .payoutsetting button{
+    box-shadow: none;
+  }
+
+  .payment_history button,.account_report button{
+    box-shadow: none;
+  }

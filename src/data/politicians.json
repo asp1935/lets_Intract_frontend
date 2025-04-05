@@ -1,0 +1,19 @@
+[
+    {
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "mobile": "9876543210",
+      "password": "password123",
+      "address": "123 Main Street, Cityville",
+      "memberPassword": "default123"
+    },
+    {
+      "name": "Jane Smith",
+      "email": "janesmith@example.com",
+      "mobile": "8765432109",
+      "password": "mypassword",
+      "address": "456 Another Ave, Townsville",
+      "memberPassword": "default123"
+    }
+  ]
+  
