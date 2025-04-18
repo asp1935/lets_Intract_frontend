@@ -8,7 +8,10 @@ export const useWhatsappConfig = (userId) => {
         queryFn: () => getWhatsappAPI(userId),
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
         enabled: !!userId,
-    }); 
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
+        // refetchOnWindowFocus: false,  // 🔥 Add this to fix re-fetching on tab switch
+    });
 };
 
 // Add whatsapp config
@@ -16,8 +19,8 @@ export const useUpsertWhatsappConfig = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: ({ userId, whatsappConfig }) => upsertWhatsappAPI(userId, whatsappConfig),
-        onSuccess: () => {
-            queryClient.invalidateQueries(["whatsapp"]); // Refresh after adding
+        onSuccess: (variables) => {
+            queryClient.invalidateQueries(["whatsapp",variables.userId]); // Refresh after adding
         },
     });
 };
@@ -29,6 +32,8 @@ export const useSmsConfig = (userId) => {
         queryFn: () => getSMSAPI(userId),
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
         enabled: !!userId,
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 
@@ -50,7 +55,8 @@ export const useAPIUrlConfig = () => {
         queryKey: ["api"],
         queryFn: getAPI,
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-        // enabled: !!userId,
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 
@@ -59,7 +65,7 @@ export const useAPIUrlConfig = () => {
 export const useUpsertAPIUrlConfig = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ( apiUrls ) => upsertAPIUrls(apiUrls),
+        mutationFn: (apiUrls) => upsertAPIUrls(apiUrls),
         onSuccess: () => {
             queryClient.invalidateQueries(["api"]); // Refresh after adding
         },

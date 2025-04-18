@@ -33,7 +33,6 @@ const AssociateUserDetails = () => {
         }))
         .filter(user => user.referredUsers.length > 0);
 
-      console.log(filteredUsers);
       
 
 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAdmin, useDeleteAdmin, useUpdateAdmin } from "../hooks/useAdmin";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "../redux/slice/ToastSlice";
+import { user } from "../redux/slice/UserSlice";
 
 const StaffUpdation = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,13 +26,28 @@ const StaffUpdation = () => {
   const { data } = useAdmin(null, 'user');  // Fetch staff 
 
 
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const currentUser = useSelector(user);
+
 
   useEffect(() => {
-    if (data) {
-      setStaff(data.data);
-      setFilteredStaff(data.data);
+    if (currentUser && currentUser.role === 'superadmin') {
+      setIsSuperAdmin(true)
+    }
+    else {
+      setIsSuperAdmin(false);
+    }
+  }, [currentUser])
+
+  useEffect(() => {
+    if (data?.data.length > 0) {
+      const sortedStaff = [...data.data].sort((a, b) => a.role.localeCompare(b.role));
+
+      setStaff(sortedStaff);
+      setFilteredStaff(sortedStaff);
     }
   }, [data]);
+
 
   useEffect(() => {
     setFilteredStaff(staff);
@@ -83,13 +99,12 @@ const StaffUpdation = () => {
   const handleUpdate = () => {
     if (validate()) {
 
-      console.log('asd');
 
       updateStaff.mutate({ adminId: editStaffId, updatedData: editForm }, {
         onSuccess: () => {
 
           setEditStaffId(null);
-          dispatch(showToast({ message: "Associate Details Updated" }))
+          dispatch(showToast({ message: "Staff Details Updated" }))
         },
         onError: (error) => dispatch(showToast({ message: error, type: 'error' }))
 
@@ -123,20 +138,25 @@ const StaffUpdation = () => {
 
 
   };
-  const permissions = {
-    home: "Home", business: "Business", politician: "Politician",
+  const adminPermissions = {
+    business: "Business", politician: "Politician", portfolio: "Portfolio",
+    notification: "Notifications", configuration: "Configuration",
+    enquiry: 'Enquiry'
+  };
+  const sAdminPermissions = {
+    business: "Business", politician: "Politician", portfolio: "Portfolio", staff: 'Staff',
     associate: "Associate Management", account: "Account", notification: "Notifications", configuration: "Configuration",
-    report: "Report"
+    report: "Report", plan: 'Plan', enquiry: 'Enquiry'
   };
   return (
     <div className="Form p-6 mt-10 mx-auto rounded-lg">
-      <h1 className="text-3xl font-bold text-center text-[#640D5F] mb-6">Staff Management</h1>
+      <h1 className="text-3xl font-bold text-center text-[#640D5F] mb-6">{isSuperAdmin ? 'Employee Management' : 'Staff Management'}</h1>
 
       <input type="search" placeholder="Search by Name" value={searchTerm} onChange={handleSearch} className="w-full p-3 border rounded-lg mb-4" />
 
       {editStaffId && (
         <div className="mb-6 p-4 bg-purple-100 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold text-[#640D5F] mb-4 text-center">Edit Staff</h2>
+          <h2 className="text-xl font-semibold text-[#640D5F] mb-4 text-center">{editForm.role === 'user' ? 'Edit Staff' : 'Edit Admin'}</h2>
           <input type="text" name="name" placeholder="Name" value={editForm.name} onChange={handleEditChange} className="w-full p-3 border rounded-lg mb-2" />
           {errors.name && <p className="text-red-400 text-sm">{errors.name}</p>}
 
@@ -146,7 +166,7 @@ const StaffUpdation = () => {
           <div>
             <h3 className="text-lg font-semibold">Permissions:</h3>
             <div className="flex flex-wrap gap-2 mt-2">
-              {Object.entries(permissions).map(([key, value]) => (
+              {Object.entries(editForm.role === 'admin' ? sAdminPermissions : adminPermissions).map(([key, value]) => (
                 <button
                   key={key}
                   type="button"
@@ -168,6 +188,7 @@ const StaffUpdation = () => {
           <tr className="bg-[#b017a8] text-white">
             <th className="p-3 border">Name</th>
             <th className="p-3 border">Email</th>
+            {isSuperAdmin && <th className="p-3 border">Role</th>}
             <th className="p-3 border">Permissions</th>
             <th className="p-3 border">Actions</th>
           </tr>
@@ -177,7 +198,8 @@ const StaffUpdation = () => {
             <tr key={staffMember._id} className="border bg-white hover:bg-gray-200">
               <td className="p-3 border text-center">{staffMember.name}</td>
               <td className="p-3 border text-center">{staffMember.email}</td>
-              <td className="p-3 border text-center">{staffMember.permissions.map((key) => permissions[key] || key).join(", ")}</td>
+              {isSuperAdmin && <td className="p-3 border text-center">{staffMember.role === 'user' ? 'Staff' : 'Admin'}</td>}
+              <td className="p-3 border text-center">{staffMember.permissions.map((key) => sAdminPermissions[key] || key).join(", ")}</td>
               <td className="p-3 border text-center">
                 <div className="flex justify-center space-x-2">
                   <button onClick={() => handleEdit(staffMember)} className="bg-blue-600 text-white px-3 py-1 rounded-lg">Edit</button>

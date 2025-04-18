@@ -8,23 +8,22 @@ export const login = async (email, password) => {
         const responce = await axios.post(`${apiUrl}/admin/login-admin`, { email, password }, { withCredentials: true });
         return responce.data;
     } catch (error) {
-        throw error.response?.data?.message || 'Login failed. Please check your credentials.';
+        const message = error.response?.data?.message || 'Login failed. Please check your credentials.';
+        throw new Error(message);
     }
 }
 
 export const getloggedInUser = async () => {
-    try {
-        const responce = await axios.get(`${apiUrl}/admin/current-user`, { withCredentials: true });
-        return responce.data
-    } catch (err) {
-        throw 'Session Expired!!! Please Login Again...';
-    }
+    // try {
+    const responce = await axios.get(`${apiUrl}/admin/current-user`, { withCredentials: true });
+    return responce.data
+    // } catch (err) {
+    //     throw new Error('Session Expired!!! Please Login Again...');
+    // }
 }
 
 export const addAdmin = async (adminDetails) => {
     try {
-        console.log(adminDetails);
-
         const { name, email, role, permissions, password } = adminDetails;
         const response = await axios.post(`${apiUrl}/admin/create-useradmin`, { name, email, role, permissions, password }, { withCredentials: true });
         return response.data;
@@ -35,7 +34,7 @@ export const addAdmin = async (adminDetails) => {
 
 export const getAdmin = async (adminId = null, roleCategory = null) => {
     try {
-        let url = `${apiUrl}/admin/get-user`;
+        let url = `${apiUrl}/admin/get-users`;
 
         if (adminId) {
             url += `/${adminId}`;
@@ -68,3 +67,14 @@ export const deleteAdmin = async (adminId) => {
         throw error.response?.data?.message || "Failed to Delete ";
     }
 }
+
+
+export const logout = async () => {
+    try {
+        const responce = await axios.get(`${apiUrl}/admin/logout-admin`, { withCredentials: true });
+        return responce.data;
+    } catch (error) {
+        throw error.response?.data?.message || "Something went Wrong";
+    }
+}
+

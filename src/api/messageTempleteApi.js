@@ -13,7 +13,6 @@ export const getUserSmsTemplete = async (userId) => {
 
 export const addUserSmsTemplete = async (userId, templeteData) => {
     try {
-        console.log(userId, templeteData);
         const { templeteName, message } = templeteData;
 
         const response = await axios.post(`${apiUrl}/smstemplete/add-templete`, { userId, templeteName, message }, { withCredentials: true });

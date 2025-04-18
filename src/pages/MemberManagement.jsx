@@ -47,7 +47,7 @@ const MemberManagement = () => {
 
 
   useEffect(() => {
-    if (userData) {
+    if (userData?.data.length > 0) {
       const politicalUsers = userData.data.filter((user) => user.type === "political" && user?.userPlans?.planDetails?.addMembers === true);
       setPoliticalPersons(politicalUsers);
     }
@@ -58,10 +58,10 @@ const MemberManagement = () => {
       setFilteredPoliticalPersons(politicalPersons || []);
       return;
     }
-    const result = politicalPersons.filter(person =>
+    const result = politicalPersons.length > 0 ? politicalPersons.filter(person =>
       person.name?.toLowerCase().includes(politicalPersonSearchTerm.toLowerCase()) ||
       person.mobile?.includes(politicalPersonSearchTerm)
-    );
+    ) : [];
 
     setFilteredPoliticalPersons(result);
   }, [politicalPersons, politicalPersonSearchTerm]);
@@ -74,7 +74,6 @@ const MemberManagement = () => {
         setMemberData(response.data);
 
         setShowMemberTable(true);
-        // console.log(response.data);
       } else {
         dispatch(showToast({ message: "No data found for this user." }));
       }
@@ -89,9 +88,9 @@ const MemberManagement = () => {
       return;
     }
 
-    const result = memberData.filter((member) =>
+    const result = memberData.length > 0 ? memberData.filter((member) =>
       member.name.toLowerCase().includes(memberSearchTerm.toLowerCase()) ||
-      member.mobile.toLowerCase().includes(memberSearchTerm.toLowerCase()))
+      member.mobile.toLowerCase().includes(memberSearchTerm.toLowerCase())) : []
 
     setFilteredMembers(result)
 
@@ -122,7 +121,6 @@ const MemberManagement = () => {
 
   const selectPerson = (person) => {
     setSelectedPerson(person);
-    console.log(person);
 
     setSelectedPlan(person.userPlans.planDetails);
     setSearchTerm("");

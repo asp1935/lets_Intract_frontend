@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { useUpdatePortfolio } from '../../hooks/usePortfolio';
+import { useUpdatePortfolio, useUpdateProfilePhoto } from '../../hooks/usePortfolio';
 import { showToast } from '../../redux/slice/ToastSlice';
+import Services from './Services';
+import { Briefcase, Images, UserPen, Users } from 'lucide-react';
+import Clients from './Clients';
+import Gallery from './Gallery';
+import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 
 function UpdatePortfolio({ portfolioData, setPortfolioData }) {
+
+    const [portfolio, setPortfolio] = useState(null)
 
     const [isEditMode, setIsEditMode] = useState(false);
     const [formData, setFormData] = useState({});
@@ -11,30 +18,63 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
 
     const dispatch = useDispatch();
     const updateBasicDetails = useUpdatePortfolio();
+    const updatePortfolioPhoto = useUpdateProfilePhoto();
+
+    const [fileUploadOpen, setFileUploadOpen] = useState(false);
+
+    const [newProfilePic, setNewProfilePic] = useState(null);
+
+
+
+    const [activeSection, setActiveSection] = useState(null); // 'services' | 'clients' | 'gallery' | null
+
 
     const url = import.meta.env.VITE_IMG_URL;
 
     useEffect(() => {
-        if (portfolioData) {
+        setPortfolio(portfolioData)
+        setActiveSection(null)
+    }, [portfolioData])
+
+    useEffect(() => {
+        if (portfolio) {
             setFormData({
-                userName: portfolioData.userName,
-                name: portfolioData.name,
-                ownerName: portfolioData.ownerName,
-                email: portfolioData.email,
-                mobile: portfolioData.mobile,
-                about: portfolioData.about,
-                address: portfolioData.address,
-                theme: portfolioData.theme,
+                userName: portfolio.userName,
+                name: portfolio.name,
+                ownerName: portfolio.ownerName,
+                email: portfolio.email,
+                mobile: portfolio.mobile,
+                socialLinks: {
+                    whatsapp: portfolio?.socialLinks?.whatsapp,
+                    instagram: portfolio?.socialLinks?.instagram,
+                    facebook: portfolio?.socialLinks?.facebook
+                },
+                about: portfolio.about,
+                address: portfolio.address,
+                theme: portfolio.theme,
             })
         }
         else {
             setFormData({})
         }
-    }, [portfolioData]);
+    }, [portfolio]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        if (['whatsapp', 'instagram', 'facebook'].includes(name)) {
+            setFormData((prevData) => ({
+                ...prevData,
+                socialLinks: {
+                    ...prevData.socialLinks,
+                    [name]: value
+                }
+            }));
+        } else {
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: value
+            }));
+        }
     };
 
     const validate = () => {
@@ -88,10 +128,12 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
     const handleSave = () => {
 
         if (validate()) {
-            updateBasicDetails.mutate({ portfolioId: portfolioData._id, updatedData: formData }, {
-                onSuccess: () => {
+            updateBasicDetails.mutate({ portfolioId: portfolio._id, updatedData: formData }, {
+                onSuccess: (data) => {
+
                     setIsEditMode(false);
-                    setPortfolioData(null);   
+                    // setPortfolioData(null);
+                    setPortfolio(data?.data)
                     setFormData({})
                     dispatch(showToast({ message: "Basic Details Updated Successfully" }))
                 },
@@ -105,9 +147,42 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
         }
     };
 
+    const handleCancle = () => {
+        setIsEditMode(false);
+        setFormData({})
+
+    }
+
+
+    const toggleSection = (section) => {
+        setActiveSection(prev => (prev === section ? null : section));
+    };
+
+    const toggleFileUpload = () => {
+        setFileUploadOpen(true);
+    }
+
+    const handleUpdatePhoto = () => {
+        if (!newProfilePic || !newProfilePic.type.startsWith('image/')) {
+            dispatch(showToast({ message: 'Profile Picture Is Required', type: 'error' }))
+            return;
+        }
+        updatePortfolioPhoto.mutate({ portfolioId: portfolio._id, userId: portfolio.userId, profilePhoto: newProfilePic }, {
+            onSuccess: (data) => {
+                setFileUploadOpen(false);
+                setNewProfilePic(null);
+                if (data?.data) {
+                    setPortfolio(data.data)
+                }
+                dispatch(showToast({ message: 'Profile Photo Updated' }))
+            },
+            onError: (error) => dispatch(showToast({ message: error, type: 'error' }))
+
+        })
+    }
 
     return (
-        <div className='w-full rounded-lg shadow-lg  p-3'>
+        <div className='w-full rounded-lg shadow-lg  p-3 relative'>
             <div className='flex justify-end p-2.5'>
                 <button
                     type='button'
@@ -121,12 +196,14 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
 
             <div className='w-9/12 mx-auto place-items-center p-2 rounded my-5 border bg-[#f8e1f6]'>
                 <div className='w-8/12 flex justify-evenly items-center'>
-                    <div className='w-40'>
+                    <div className='w-40 relative'>
                         <img
-                            className='w-40 rounded-full'
-                            src={portfolioData?.profilePhotoUrl ? `${url}${portfolioData.profilePhotoUrl}` : '../../assets/profile.jpg'}
+                            className='w-40 h-40 rounded-full'
+                            src={portfolio?.profilePhotoUrl ? `${url}${portfolio.profilePhotoUrl}` : '../../assets/profile.jpg'}
                             alt="Profile"
                         />
+                        <UserPen className='absolute bottom-0 left-1/2 transform -translate-x-1/2  cursor-pointer  text-black hover:scale-105 '
+                            onClick={toggleFileUpload} />
                     </div>
 
                     <div className='flex flex-col gap-y-1.5'>
@@ -144,7 +221,7 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                                     {errors.userName && <p className="text-red-400 text-sm">{errors.userName}</p>}
                                 </>
                             ) : (
-                                <h4 className='text-lg'>{portfolioData?.userName}</h4>
+                                <h4 className='text-lg'>{portfolio?.userName}</h4>
                             )}
                         </div>
 
@@ -162,7 +239,7 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                                     {errors.name && <p className="text-red-400 text-sm">{errors.name}</p>}
                                 </>
                             ) : (
-                                <h4 className='text-lg'>{portfolioData?.name}</h4>
+                                <h4 className='text-lg'>{portfolio?.name}</h4>
                             )}
                         </div>
 
@@ -181,7 +258,7 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
 
                                 </>
                             ) : (
-                                <h4 className='text-lg'>{portfolioData?.ownerName}</h4>
+                                <h4 className='text-lg'>{portfolio?.ownerName}</h4>
                             )}
                         </div>
                     </div>
@@ -202,7 +279,7 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                                 {errors.mobile && <p className="text-red-400 text-sm">{errors.mobile}</p>}
                             </>
                         ) : (
-                            <p className='text-lg'>{portfolioData?.mobile}</p>
+                            <p className='text-lg'>{portfolio?.mobile}</p>
                         )}
                     </div>
 
@@ -221,7 +298,7 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
 
                             </>
                         ) : (
-                            <p className='text-lg'>{portfolioData?.email}</p>
+                            <p className='text-lg'>{portfolio?.email}</p>
                         )}
                     </div>
 
@@ -240,9 +317,37 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
 
                             </>
                         ) : (
-                            <p className='text-lg '>{portfolioData?.address}</p>
+                            <p className='text-lg '>{portfolio?.address}</p>
                         )}
                     </div>
+                </div>
+
+                <div className='w-9/12 my-5'>
+                    <h5 className='text-center text-gray-500 font-semibold'>Social Media</h5>
+                    {isEditMode ? (
+                        <div className='mt-2 flex  gap-1'>
+                            <div>
+                                <label className="text-[#640D5F] font-bold">Whatsapp :</label>
+                                <input type="url" name="whatsapp" placeholder="Whtasapp URL" value={formData?.socialLinks?.whatsapp} onChange={handleInputChange} className="w-full rounded p-2 border  border-[#640D5F]" />
+                            </div>
+                            <div>
+                                <label className="text-[#640D5F] font-bold">Instagram :</label>
+                                <input type="url" name="instagram" placeholder="Instagram URL" value={formData?.socialLinks?.instagram} onChange={handleInputChange} className="w-full rounded p-2 border  border-[#640D5F]" />
+                            </div>
+                            <div>
+                                <label className="text-[#640D5F] font-bold">Facebook :</label>
+                                <input type="url" name="facebook" placeholder="Facebook URL" value={formData?.socialLinks?.facebook} onChange={handleInputChange} className="w-full rounded p-2 border  border-[#640D5F]" />
+                            </div>
+
+                        </div>
+                    ) : (
+                        <div className=' flex justify-evenly mt-2 text-3xl '>
+                            <FaWhatsapp className='text-lime-500  cursor-pointer' onClick={() => window.open(portfolio?.socialLinks?.whatsapp)} />
+                            <FaInstagram className='text-pink-600 cursor-pointer' onClick={() => window.open(portfolio?.socialLinks?.instagram)} />
+                            <FaFacebook className='text-blue-600 cursor-pointer' onClick={() => window.open(portfolio?.socialLinks?.facebook)} />
+                        </div>
+                    )}
+
                 </div>
 
                 <div className='w-9/12 my-5'>
@@ -260,7 +365,7 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
 
                         </>
                     ) : (
-                        <p className='text-center text-lg '>{portfolioData?.about}</p>
+                        <p className='text-center text-lg '>{portfolio?.about}</p>
                     )}
                 </div>
                 <div className='w-9/12 my-5'>
@@ -284,13 +389,22 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
 
                 <div className='justify-self-end p-2.5'>
                     {isEditMode ? (
-                        <button
-                            type='button'
-                            onClick={handleSave}
-                            className='bg-green-500 text-white px-3 py-0.5 rounded hover:bg-green-600 shadow-md transition-transform transform hover:scale-105'
-                        >
-                            Save
-                        </button>
+                        <div className='space-x-2'>
+                            <button
+                                type='button'
+                                onClick={handleCancle}
+                                className='bg-red-500 text-white px-3 py-0.5 rounded hover:bg-red-600 shadow-md transition-transform transform hover:scale-105'
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type='button'
+                                onClick={handleSave}
+                                className='bg-green-500 text-white px-3 py-0.5 rounded hover:bg-green-600 shadow-md transition-transform transform hover:scale-105'
+                            >
+                                Save
+                            </button>
+                        </div>
                     ) : (
                         <button
                             type='button'
@@ -301,8 +415,54 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                         </button>
                     )}
                 </div>
+                <div className='space-x-3 text-white'>
+                    <button className='bg-rose-600 hover:bg-rose-700  px-3 py-1 rounded' onClick={() => toggleSection('services')} >Services <Briefcase className='inline-block' /> </button>
+                    <button className='bg-rose-600 hover:bg-rose-700  px-3 py-1 rounded' onClick={() => toggleSection('clients')} >Clients <Users className='inline-block' /></button>
+                    <button className='bg-rose-600 hover:bg-rose-700  px-3 py-1 rounded' onClick={() => toggleSection('gallery')} >Gallery <Images className='inline-block' /></button>
+                </div>
             </div>
-        </div>
+            <div>
+                {activeSection === 'services' && <Services servicesData={portfolio?.services} pid={portfolio?._id} />}
+                {activeSection === 'clients' && <Clients clientsData={portfolio?.clients} uid={portfolio?.userId} pid={portfolio?._id} />}
+                {activeSection === 'gallery' && <Gallery galleryData={portfolio?.gallery} uid={portfolio?.userId} pid={portfolio?._id} />}
+
+            </div>
+            {/* Delete Confirmation Modal */}
+            {
+                fileUploadOpen && (
+                    <div className="fixed top-0 left-1/2 transform -translate-x-1/2 w-full h-full flex items-center justify-center bg-black/40">
+                        <div className="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-300">
+                            <h2 className="text-xl font-bold mb-4">Update Profile Picture</h2>
+                            <div className='flex flex-col'>
+                                {/* <label htmlFor={`profile`}>Logo</label> */}
+                                <input
+                                    type="file"
+                                    name="images"
+                                    id={`profile`}
+                                    // value={client.title}
+                                    accept=".png, .jpg, .jpeg"
+                                    onChange={(e) => setNewProfilePic(e.target.files[0])}
+                                    className='border p-1 rounded'
+                                    required
+                                />
+                            </div>
+                            <button
+                                onClick={handleUpdatePhoto}
+                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition mt-5 "
+                            >
+                                Confirm
+                            </button>
+                            <button
+                                onClick={() => { setFileUploadOpen(false); setNewProfilePic(null) }}
+                                className="bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded hover:bg-gray-400 transition ml-2"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                )
+            }
+        </div >
     );
 };
 

@@ -7,7 +7,6 @@ function MemberForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Member Form Submitted:', { name, email });
     setName('');
     setEmail('');
   };

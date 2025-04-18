@@ -9,7 +9,7 @@ const AddAssociate = () => {
   const [associateData, setAssociateData] = useState({
     name: "",
     email: "",
-    mobile: null,
+    mobile: '',
     state: "",
     district: "",
     taluka: "",

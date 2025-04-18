@@ -2,11 +2,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addAdmin, deleteAdmin, getAdmin, updateAdmin } from "../api/adminApi";
 
 // Fetch admin
-export const useAdmin = (adminId = null, roleCategory = null) => {
+export const   useAdmin = (adminId = null, roleCategory = null) => {
     return useQuery({
         queryKey: ["admin", adminId, roleCategory],
         queryFn: () => getAdmin(adminId, roleCategory),
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 

@@ -45,9 +45,7 @@ const AddPolitician = () => {
 
 
   useEffect(() => {
-    console.log(data);
-    
-    if (data) {
+    if (data?.data.length>0) {
       setPoliticians(data.data)
     }
   }, [data])

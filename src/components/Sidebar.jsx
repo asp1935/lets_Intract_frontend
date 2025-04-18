@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Home, ChevronDown, ChevronRight, Users, Briefcase, Bell, FilePlus, Settings, File, UserPlus, User, User2Icon, SquareUser } from "lucide-react";
 import { FaQuestionCircle } from "react-icons/fa";
 import "./application.css";
 import { NavLink } from 'react-router';
+import { useSelector } from "react-redux";
+import { user } from "../redux/slice/UserSlice";
 const Sidebar = ({ onMenuClick }) => {
   const [isPoliticianOpen, setIsPoliticianOpen] = useState(false);
   const [isBusinessOpen, setIsBusinessOpen] = useState(false);
@@ -12,13 +14,33 @@ const Sidebar = ({ onMenuClick }) => {
   const [isStaffOpen, setIsStaffOpen] = useState(false);
   const [isAssociateOpen, setIsAssociateOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
-  const [isAssociateDetailsOpen, setIsAssociateDetailsOpen] = useState(false); // New state for Associate details dropdown
-  const [isStaffDetailsOpen, setIsStaffDetailsOpen] = useState(false); // New state for Staff details dropdown
+  const [isAssociateDetailsOpen, setIsAssociateDetailsOpen] = useState(false);
+  const [isStaffDetailsOpen, setIsStaffDetailsOpen] = useState(false);
 
   const dropdownVariants = {
     hidden: { opacity: 0, height: 0, overflow: "hidden" },
     visible: { opacity: 1, height: "auto", transition: { duration: 0.3 } },
   };
+
+  const currentUser = useSelector(user);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+
+
+  const hasPermission = (perm) => {
+    if (currentUser.role === "superadmin") {
+      return true
+    }
+    return currentUser?.permissions?.includes(perm);
+  }
+
+  useEffect(() => {
+    if (currentUser && currentUser.role === 'superadmin') {
+      setIsSuperAdmin(true)
+    }
+    else {
+      setIsSuperAdmin(false);
+    }
+  }, [currentUser])
 
   return (
     <div className="w-[21vw] sidebar-container min-h-screen bg-gray-100 p-4 shadow-lg fixed top-0 left-0 z-[999]  h-full overflow-y-auto">
@@ -29,13 +51,13 @@ const Sidebar = ({ onMenuClick }) => {
       <ul className="space-y-1">
         {/* Home */}
         <NavLink to='/'>
-          <li className="flex items-center py-2 px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("home")}>
+          <li className="flex items-center py-2 px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" >
             <Home className="w-5 h-5 mr-2 text-blue-600" />
             Home
           </li>
         </NavLink>
         {/* Business Dropdown */}
-        <li>
+        {hasPermission('business') && (<li>
           <button className="flex items-center justify-between w-full px-3 hover:bg-[#ebace8] rounded-md transition-all" onClick={() => setIsBusinessOpen(!isBusinessOpen)}>
             <span className="flex py-2 text-lg font-semibold items-center">
               <Briefcase className="w-5 h-5 mr-2 text-yellow-600" />
@@ -50,10 +72,10 @@ const Sidebar = ({ onMenuClick }) => {
             <NavLink to='/business/updation'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >Customer Updation</li></NavLink>
             <NavLink to='/business/message'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >Create Message</li></NavLink>
           </motion.ul>
-        </li>
+        </li>)}
 
         {/* Politician Dropdown */}
-        <li>
+        {hasPermission('politician') && (<li>
           <button className="flex items-center justify-between w-full px-3 hover:bg-[#ebace8] rounded-md transition-all" onClick={() => setIsPoliticianOpen(!isPoliticianOpen)}>
             <span className="flex text-lg font-semibold py-2 items-center">
               <Users className="w-5 h-5 mr-2 text-green-600" />
@@ -68,9 +90,10 @@ const Sidebar = ({ onMenuClick }) => {
             <NavLink to='/politician/updation'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" > Politician Updation</li></NavLink>
             <NavLink to='/politician/message'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md"> Create Message</li></NavLink>
           </motion.ul>
-        </li>
+        </li>)}
+
         {/* Customer Portfolio */}
-        <li>
+        {hasPermission('portfolio') && (<li>
           <button className="flex items-center justify-between w-full px-3 hover:bg-[#ebace8] rounded-md transition-all" onClick={() => setIsPortfolioOpen(!isPortfolioOpen)}>
             <span className="flex text-lg font-semibold py-2 items-center">
               <SquareUser className="w-5 h-5 mr-2 text-orange-600" />
@@ -82,40 +105,40 @@ const Sidebar = ({ onMenuClick }) => {
             <NavLink to='/portfolio/add'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" > New Portfolio</li></NavLink>
             <NavLink to='/portfolio/manage'> <li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" > Manage Portfolios</li></NavLink>
           </motion.ul>
-        </li>
-       
+        </li>)}
+
         {/* Staff Management Dropdown */}
-        <li>
+        {hasPermission('staff') && (<li>
           <button className="flex items-center justify-between w-full px-3 hover:bg-[#ebace8] rounded-md transition-all" onClick={() => setIsStaffOpen(!isStaffOpen)}>
             <span className="flex text-lg font-semibold py-2 items-center">
-              <User Plus className="w-5 h-5 mr-2 text-pink-600" />
-              Staff Management
+              <User className="w-5 h-5 mr-2 text-pink-600" />
+              {isSuperAdmin?'Employee Mnagement':'Staff Management'}
             </span>
             {isStaffOpen ? <ChevronDown /> : <ChevronRight />}
           </button>
           <motion.ul className="ml-4 mt-1 bg-[#fdfcfd] shadow-md rounded-lg" initial="hidden" animate={isStaffOpen ? "visible" : "hidden"} variants={dropdownVariants}>
-            <NavLink to='/staff/add'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("addStaff")}>Add Staff</li></NavLink>
-            <NavLink to='/staff/updation'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("staffUpdation")}>Staff Updation</li></NavLink>
+            <NavLink to='/staff/add'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >{isSuperAdmin?'Add Employee':'Add Staff'}</li></NavLink>
+            <NavLink to='/staff/updation'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >{isSuperAdmin?'Employee Updation':'Staff Updation'}</li></NavLink>
           </motion.ul>
-        </li>
+        </li>)}
 
         {/* Associate Management Dropdown */}
-        <li>
+        {hasPermission('associate') && (<li>
           <button className="flex items-center justify-between w-full px-3 hover:bg-[#ebace8] rounded-md transition-all" onClick={() => setIsAssociateOpen(!isAssociateOpen)}>
             <span className="flex text-lg font-semibold py-2 items-center">
-              <User Plus className="w-5 h-5 mr-2 text-purple-600" />
+              <UserPlus className="w-5 h-5 mr-2 text-purple-600" />
               Associate Management
             </span>
             {isAssociateOpen ? <ChevronDown /> : <ChevronRight />}
           </button>
           <motion.ul className="ml-4 mt-1 bg-[#fdfcfd] shadow-md rounded-lg" initial="hidden" animate={isAssociateOpen ? "visible" : "hidden"} variants={dropdownVariants}>
-            <NavLink to='/associate/add'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("addAssociate")}>Add Associate</li></NavLink>
-            <NavLink to='/associate/updation'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("associateUpdation")}>Associate Updation</li></NavLink>
+            <NavLink to='/associate/add'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >Add Associate</li></NavLink>
+            <NavLink to='/associate/updation'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >Associate Updation</li></NavLink>
           </motion.ul>
-        </li>
+        </li>)}
 
         {/* Account Dropdown */}
-        <li>
+        {hasPermission('account') && (<li>
           <button className="flex items-center justify-between w-full px-3 hover:bg-[#ebace8] rounded-md transition-all" onClick={() => setIsAccountOpen(!isAccountOpen)}>
             <span className="flex text-lg font-semibold py-2 items-center">
               <User className="w-5 h-5 mr-2 text-[#640D5F]" />
@@ -126,7 +149,7 @@ const Sidebar = ({ onMenuClick }) => {
           <motion.ul className="ml-4 mt-1 bg-[#fdfcfd] shadow-md rounded-lg" initial="hidden" animate={isAccountOpen ? "visible" : "hidden"} variants={dropdownVariants}>
             {/* Staff Dropdown under Account */}
             <li>
-              <button className="flex items-center justify-between w-full px-3 hover:bg-[#ebace8] rounded-md transition-all" onClick={() => setIsStaffDetailsOpen(!isStaffDetailsOpen)}>
+              <button className="flex items-center justify-between w-full px-3 hover:bg-[#ebace8] rounded-md transition-all" onClick={() => setIsStaffDetailsOpen(!isStaffDetailsOpen)} >
                 <span className="flex text-md font-semibold py-2 items-center">
                   <User className="w-4 h-4 mr-2 text-[#640D5F]" />
                   Staff
@@ -134,10 +157,10 @@ const Sidebar = ({ onMenuClick }) => {
                 {isStaffDetailsOpen ? <ChevronDown /> : <ChevronRight />}
               </button>
               <motion.ul className="ml-4 mt-1 bg-[#fdfcfd] shadow-md rounded-lg" initial="hidden" animate={isStaffDetailsOpen ? "visible" : "hidden"} variants={dropdownVariants}>
-                <NavLink to='/account/staff-user-details'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("staffUserDetails")}>User  Details</li></NavLink>
-                <NavLink to='/account/staff-payout'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("staffPayout")}>Payout</li></NavLink>
-                <NavLink to='/account/staff-payout-setting'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("staffPayoutsetting")}>Payout Setting</li></NavLink>
-                <NavLink to='/account/staff-history'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("staffHistory")}>History</li></NavLink>
+                <NavLink to='/account/staff-user-details'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >User  Details</li></NavLink>
+                <NavLink to='/account/staff-payout'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >Payout</li></NavLink>
+                <NavLink to='/account/staff-payout-setting'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md">Payout Setting</li></NavLink>
+                <NavLink to='/account/staff-history'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >History</li></NavLink>
               </motion.ul>
             </li>
             {/* Associate Dropdown under Account */}
@@ -150,54 +173,57 @@ const Sidebar = ({ onMenuClick }) => {
                 {isAssociateDetailsOpen ? <ChevronDown /> : <ChevronRight />}
               </button>
               <motion.ul className="ml-4 mt-1 bg-[#fdfcfd] shadow-md rounded-lg" initial="hidden" animate={isAssociateDetailsOpen ? "visible" : "hidden"} variants={dropdownVariants}>
-                <NavLink to='/account/associate-user-details'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("associateUserDetails")}>User  Details</li></NavLink>
-                <NavLink to='/account/associate-payout'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("associatePayout")}>Payout</li></NavLink>
-                <NavLink to='/account/associate-payout-setting'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("associatePayoutsetting")}>Payout Setting</li></NavLink>
-                <NavLink to='/account/associate-history'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("associateHistory")}>History</li></NavLink>
+                <NavLink to='/account/associate-user-details'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >User  Details</li></NavLink>
+                <NavLink to='/account/associate-payout'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >Payout</li></NavLink>
+                <NavLink to='/account/associate-payout-setting'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >Payout Setting</li></NavLink>
+                <NavLink to='/account/associate-history'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md">History</li></NavLink>
               </motion.ul>
             </li>
-            <NavLink to='/account/reports'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("accountReport")}>Reports</li></NavLink>
+            <NavLink to='/account/reports'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md"  >Reports</li></NavLink>
           </motion.ul>
-        </li>
+        </li>)}
 
         {/* Notifications */}
-        <NavLink to='/notification'>
-          <li className="py-2 flex items-center mt-0 px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("notification")}>
+        {hasPermission('notification') && (<NavLink to='/notification'>
+          <li className="py-2 flex items-center mt-0 px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" >
             <Bell className="w-5 h-5 mr-2 text-red-600" />
             Notifications
           </li>
-        </NavLink>
+        </NavLink>)}
 
 
         {/* Configuration */}
-        <NavLink to='/configuration'>
-          <li className="py-2 flex items-center mt-0 px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("configuration")}>
+        {hasPermission('configuration') && (<NavLink to='/configuration'>
+          <li className="py-2 flex items-center mt-0 px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" >
             <Settings className="w-5 h-5 mr-2 text-sky-900" />
             Configuration
           </li>
-        </NavLink>
+        </NavLink>)}
 
         {/* Create Plan */}
-        <NavLink to='/create-plan'>
-          <li className="py-2 flex items-center px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("createPlan")}>
+        {hasPermission('plan') && (<NavLink to='/create-plan'>
+          <li className="py-2 flex items-center px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" >
             <FilePlus className="w-5 h-5 mr-2 text-[#640D5F]" />
             Create Plan
           </li>
-        </NavLink>
+        </NavLink>)}
 
         {/* <NavLink to='/report'>
-          <li className="py-2 flex items-center px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("reports")}>
+          <li className="py-2 flex items-center px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" >
             <File className="w-5 h-5 mr-2 text-sky-800" />
             Report
           </li>
         </NavLink> */}
 
-        <NavLink to='/enquiry'>
-          <li className="py-2 flex items-center px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" onClick={() => onMenuClick("enquiry")}>
+        {hasPermission('enquiry') && (<NavLink to='/enquiry'>
+          <li className="py-2 flex items-center px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" >
             <FaQuestionCircle className="w-5 h-5 mr-2 text-orange-500" />
             Enquiry
           </li>
-        </NavLink>
+        </NavLink>)}
+
+
+
       </ul>
     </div>
   );

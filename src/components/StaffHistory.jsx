@@ -44,7 +44,6 @@ const StaffHistory = () => {
 
   // Function to handle the "Download" action for a single entry
   const handleDownload = (entry) => {
-    console.log(entry);
 
     const doc = new jsPDF();
 

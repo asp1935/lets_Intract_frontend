@@ -8,6 +8,8 @@ export const useUser = (userId = null, role = null, type = null) => {
         queryKey: ["user", userId, role, type],
         queryFn: () => getUser(userId, role, type),
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 
@@ -87,6 +89,8 @@ export const useUserPlan = (userId = null) => {
         queryKey: ["userplan", userId],
         queryFn: () => getUserPlan(userId),
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries    
     });
 }
 

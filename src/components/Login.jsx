@@ -16,7 +16,7 @@ const Login = () => {
     try {
       const responce = await login(formData.email, formData.password);
       if (responce?.data) {
-        dispatch(setUserData(responce.data))
+        dispatch(setUserData(responce.data.user))
         // dispatch(showToast({ message: `Welcome Back ${responce.data.role || 'User'}` }))
       }
 

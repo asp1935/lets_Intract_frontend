@@ -9,6 +9,8 @@ export const useWhatsappTemplete = (userId) => {
         queryKey: ["whatsappTemplete", userId],
         queryFn: () => getUserWhatsappTemplete(userId),
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 
@@ -29,6 +31,8 @@ export const useSMSTemplete = (userId) => {
         queryKey: ["smsTemplete", userId],
         queryFn: () => getUserSmsTemplete(userId),
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 

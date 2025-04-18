@@ -43,7 +43,6 @@ const AssociatePayout = () => {
   }
 
   const handlePayoutClick = (user) => {
-    console.log(user);
     
     setSelectedUser(user);
     setIsModalOpen(true);

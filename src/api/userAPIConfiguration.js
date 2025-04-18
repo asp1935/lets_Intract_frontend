@@ -5,7 +5,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 export const upsertWhatsappAPI = async (userId, whatsappConfig) => {
     try {
-        
+
         const { apiKey, apiAuthKey, channelNo } = whatsappConfig;
         const responce = await axios.post(`${apiUrl}/whatsappconfig/upsert-config`, { userId, apiKey, apiAuthKey, channelNo }, { withCredentials: true });
         return responce.data
@@ -17,11 +17,18 @@ export const upsertWhatsappAPI = async (userId, whatsappConfig) => {
 export const getWhatsappAPI = async (userId) => {
     try {
         const response = await axios.get(`${apiUrl}/whatsappconfig/get-config/${userId}`, { withCredentials: true });
-        return response.data
+        return response.data;
     } catch (error) {
-        throw error.responce?.data?.message || "Faild to Get API Congiguration"
+
+        // if (error.response?.status === 404) {
+        //     return null
+        // }
+        // const msg = error.response?.data?.message || "Failed to Get API Configuration";
+        // throw new Error(msg);
+        throw error.response?.data?.message || "Failed to Get API Configuration";
     }
 }
+
 
 export const upsertSMSAPI = async (userId, smsConfig) => {
     try {
@@ -38,6 +45,7 @@ export const getSMSAPI = async (userId) => {
         const response = await axios.get(`${apiUrl}/smsconfig/get-config/${userId}`, { withCredentials: true });
         return response.data
     } catch (error) {
+
         throw error.responce?.data?.message || "Faild to Get API Congiguration"
     }
 }

@@ -5,11 +5,11 @@ import { useAPIUrlConfig, useSmsConfig, useUpsertAPIUrlConfig, useUpsertSmsConfi
 import { showToast } from "../redux/slice/ToastSlice";
 
 const Configuration = () => {
-  const [apiKeys, setApiKeys] = useState({
-    whatsapp: { key: "", authKey: "", channel: "" },
-    sms: { key: "", senderId: "", channel: "", dcs: "" },
-    apiUrl: { key: "", spiKey: "" },
-  });
+  // const [apiKeys, setApiKeys] = useState({
+  //   whatsapp: { key: "", authKey: "", channel: "" },
+  //   sms: { key: "", senderId: "", channel: "", dcs: "" },
+  //   apiUrl: { key: "", spiKey: "" },
+  // });
 
   const [whatsappConfig, setWhatsappConfig] = useState({ apiKey: "", apiAuthKey: "", channelNo: "" })
   const [smsConfig, setSmsConfig] = useState({ apiKey: "", senderId: "", dcs: "", channelNo: "" });
@@ -39,32 +39,44 @@ const Configuration = () => {
 
   const dispatch = useDispatch();
 
+  const { data: smsConfigData  } = useSmsConfig(selectedCustomer?._id || '')
   const { data: whatsappConfigData } = useWhatsappConfig(selectedCustomer?._id || '')
-  const { data: smsConfigData } = useSmsConfig(selectedCustomer?._id || '')
   const { data: apiUrlData } = useAPIUrlConfig();
   const upsertWhatsappConfig = useUpsertWhatsappConfig();
   const upsertSmsConfig = useUpsertSmsConfig();
   const upsetApiUrls = useUpsertAPIUrlConfig();
 
+
+  // useEffect(() => {
+  //     dispatch(showToast({ message: error, type: 'error' }))
+  // }, [isError])
+
   useEffect(() => {
-    if (whatsappConfigData?.data.length > 0) {
-      setWhatsappConfig(whatsappConfigData.data)
-    } else {
-      setWhatsappConfig({ apiKey: "", apiAuthKey: "", channelNo: "" })
-    }
-    if (smsConfigData?.data.length > 0) {
-      setSmsConfig(smsConfigData.data)
-    } else {
-      setSmsConfig({ apiKey: "", senderId: "", dcs: "", channelNo: "" })
-    }
-    if (apiUrlData?.data.length > 0) {
-      setApiUrls(apiUrlData.data)
+    if (whatsappConfigData?.data) {
+      setWhatsappConfig({ apiKey: whatsappConfigData.data.apiKey, apiAuthKey: whatsappConfigData.data.apiAuthKey, channelNo: whatsappConfigData.data.channelNo })
     }
     else {
+      setWhatsappConfig({ apiKey: "", apiAuthKey: "", channelNo: "" })
+    }
+  }, [whatsappConfigData])
+
+  useEffect(() => {
+    if (smsConfigData?.data) {
+      setSmsConfig({ apiKey: smsConfigData.data.apiKey, senderId: smsConfigData.data.senderId, dcs: smsConfigData.data.channelNo, channelNo: smsConfigData.data.channelNo })
+    }
+    else {
+      setSmsConfig({ apiKey: "", senderId: "", dcs: "", channelNo: "" })
+    }
+  }, [smsConfigData])
+
+  useEffect(() => {
+
+    if (apiUrlData?.data) {
+      setApiUrls({ whatsappApiUrl: apiUrlData.data.whatsappApiUrl, smsApiUrl: apiUrlData.data.smsApiUrl })
+    } else {
       setApiUrls({ whatsappApiUrl: "", smsApiUrl: "" })
     }
-  }, [apiUrlData, whatsappConfigData, smsConfigData])
-
+  }, [apiUrlData])
 
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
@@ -84,6 +96,7 @@ const Configuration = () => {
     setSelectedCustomer(customer);
     setSearchQuery(customer.name);
     setShowDropdown(false);
+    // refetch();
   };
 
   const handleInputChange = (e, section, key) => {

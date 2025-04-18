@@ -28,7 +28,7 @@ const AssociateUpdation = () => {
 
   // Set associateList once data is fetched
   useEffect(() => {
-    if (data.data.length>0) {
+    if (data?.data?.length>0) {
       setAssociates(data.data);
     }
   }, [data]);

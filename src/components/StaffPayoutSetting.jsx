@@ -3,6 +3,7 @@ import { FaSync, FaEdit } from "react-icons/fa"; // Import icons
 import { useDispatch } from "react-redux";
 import { useStaff, useUpdateStaffIncentive } from "../hooks/useStaffRef";
 import { showToast } from "../redux/slice/ToastSlice";
+import { genrateSaffPayout } from "../api/payoutApi";
 
 const StaffPayoutSetting = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -10,17 +11,19 @@ const StaffPayoutSetting = () => {
   const [incentiveRate, setIncentiveRate] = useState("");
   const [defaultIncentive, setDefaultIncentive] = useState("");
   const [showDefaultIncentiveField, setShowDefaultIncentiveField] = useState(false);
+  const [confirmationInput, setConfirmationInput] = useState("");
+  const [showConfirmBox, setShowConfirmBox] = useState(false);
 
   const [staffs, setStaffs] = useState([]);
 
   const dispatch = useDispatch();
-  const { data: staffData } = useStaff();
+  const { data: staffData, refetch } = useStaff();
 
   const updateStaffIncentive = useUpdateStaffIncentive();
 
 
   useEffect(() => {
-    if (staffData?.data) {
+    if (staffData?.data.length > 0) {
       setStaffs(staffData.data)
     }
   }, [staffData])
@@ -29,9 +32,9 @@ const StaffPayoutSetting = () => {
 
 
   // Filter staffs based on search term
-  const filteredStaffs = staffs.filter((staff) =>
+  const filteredStaffs = staffs.length > 0 ? staffs.filter((staff) =>
     staff.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ) : [];
 
   // Handle setting a default incentive for all staffs
   const handleSetDefaultIncentive = () => {
@@ -83,6 +86,45 @@ const StaffPayoutSetting = () => {
       prevStaffs.map((staff) => ({ ...staff }))
     );
   };
+
+  const handleGenrate = () => {
+
+    staffs.map(staff => {
+      if (staff.incentive <= 0) {
+        dispatch(showToast({ message: 'All Staff Incentive Not Set You can update Incentive', type: 'warn' }))
+        setShowConfirmBox(true);
+      }
+    })
+    setShowConfirmBox(true)
+  } 
+
+
+  const handleConfirmGenrate = async () => {
+    if (confirmationInput.toLowerCase() !== "confirm") {
+      alert("Please enter 'confirm' to delete the record.");
+      return;
+    }
+    try {
+      const respose = await genrateSaffPayout();
+      if (respose.statusCode === 201) {
+        setShowConfirmBox(false);
+        setConfirmationInput('');
+        await refetch()
+        dispatch(showToast({ message: 'Payout Genrated Successfully' }))
+      }
+      else if (respose.statusCode === 200) {
+        setShowConfirmBox(false);
+        setConfirmationInput('');
+        await refetch()
+        dispatch(showToast({ message: 'No Records For Payout', type: 'warn' }))
+      }
+    } catch (error) {
+      setShowConfirmBox(false);
+      setConfirmationInput('');
+      dispatch(showToast({ message: error, type: 'error' }))
+
+    }
+  }
 
   return (
     <div className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 shadow-lg rounded-lg">
@@ -181,7 +223,15 @@ const StaffPayoutSetting = () => {
 
       {/* Staffs Table */}
       <div className="mb-8">
-        <h3 className="text-xl font-semibold mb-4 text-[#640D5F]">Staffs</h3>
+        <div className="flex justify-between items-baseline">
+          <h3 className="text-xl font-semibold mb-4 text-[#640D5F]">Staffs</h3>
+          <button
+            className="px-4 py-2 bg-[#e22c2c] text-white font-bold rounded-lg hover:bg-[#c40909] transition-all"
+            onClick={handleGenrate}
+          >
+            Genrate Payout
+          </button>
+        </div>
         <table className="min-w-full bg-white border border-gray-200 shadow-sm">
           <thead className="bg-[#d64fcf] text-white">
             <tr>
@@ -221,6 +271,24 @@ const StaffPayoutSetting = () => {
           </tbody>
         </table>
       </div>
+      {showConfirmBox && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-300">
+            <h2 className="text-xl font-semibold mb-4">Confirm Payout Genration</h2>
+            <p>Enter 'confirm' to Genrate Payout:</p>
+            <input
+              type="text"
+              value={confirmationInput}
+              onChange={(e) => setConfirmationInput(e.target.value)}
+              className="w-full p-2 border rounded-lg mb-4"
+            />
+            <div className="flex justify-center gap-5">
+              <button onClick={handleConfirmGenrate} className="bg-green-600   text-white px-4 py-2 rounded-lg">Genrate</button>
+              <button onClick={() => setShowConfirmBox(false)} className="bg-gray-300 text-black px-4 py-2 rounded-lg">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

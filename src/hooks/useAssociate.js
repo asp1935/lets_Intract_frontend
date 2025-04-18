@@ -8,6 +8,8 @@ export const useAssociate = (associateId = null) => {
         queryKey: ["associate", associateId],
         queryFn: () => getAssociates(associateId),
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 
@@ -50,6 +52,8 @@ export const useAssociateRef = (userType) => {
         queryKey: ["associateRef", userType],
         queryFn: () => getAssociateRefUsers(userType),
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AddPolitician from "./pages/AddPolitician";
 import MemberManagement from "./pages/MemberManagement";
 import PoliticianUpdation from "./pages/PoliticianUpdation";
@@ -30,7 +30,7 @@ import StaffUserDetails from "./components/StaffUserDetails";
 import Enquiry from "./components/Enquiry";
 import Login from "./components/Login";
 
-import { Route, Routes, BrowserRouter, NavLink } from 'react-router';
+import { Route, Routes, BrowserRouter, NavLink, useLocation } from 'react-router';
 import Index from "./components/Index";
 import GuestRoute from "./components/RouterComponent/GuestRoute";
 import ProtededRoute from "./components/RouterComponent/ProtededRoute";
@@ -42,20 +42,15 @@ import { showToast } from "./redux/slice/ToastSlice";
 import AccountReport from "./components/AccountReport";
 import AddPortfolio from "./pages/AddPortfolio";
 import ManagePortfolio from "./pages/ManagePortfolio";
+import Portfolio from "./pages/Portfolio";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
-  // const [activeContent, setActiveContent] = useState("home");
-  // const [history, setHistory] = useState([]);  // Lift history state to App component
 
-  // const handleMenuClick = (menu) => {
-  //   setActiveContent(activeContent === menu ? null : menu);
-  // };
-
-  // const handleLogout = () => {
-  //   alert("Logging out..."); // Replace with actual logout functionality
-  // };
 
   const dispatch = useDispatch();
+  const location = useLocation();
+  const [loading, setLoading] = useState(true);
 
   const setCurrentLoggedInUser = async () => {
     try {
@@ -66,36 +61,56 @@ const App = () => {
       }
 
     } catch (error) {
+
+      if (error.response?.status === 401) {
+        if (location.pathname !== '/login') {
+          window.location.replace('/login');
+        }
+      }
+
       const errorMessage = error.response?.data?.message || error.message || "Something went wrong";
 
       dispatch(showToast({ message: errorMessage, type: 'error' }));
       window.alert(errorMessage);
-
-      if (error.response?.status === 401) {
-        return <NavLink to='\login' />
-
-      }
+    }
+    finally {
+      setLoading(false)
     }
   }
 
   useEffect(() => {
-    setCurrentLoggedInUser();
+    const isPublicRoute =
+      location.pathname.startsWith('/portfolio') || location.pathname === '/404';
 
-  }, [dispatch])
+    if (!isPublicRoute) {
+      setCurrentLoggedInUser();
+    } else {
+      setLoading(false)
+    }
+  }, []);
+  if (loading) {
+    return <div className="w-screen h-screen flex justify-center items-center text-lg font-medium">Loading...</div>;
+  }
+
 
   return (
-    <>
-      <BrowserRouter>
-        {/* <div className="flex h-screen"> */}
-        <Routes>
-          <Route element={<GuestRoute />}>
-            <Route path='/login' element={<Login />} />
-          </Route>
-          <Route element={<ProtededRoute />}>
-            <Route path="/" element={<Index />}>
-              <Route path="/" element={<Home />} />
 
-              {/* Business Routes  */}
+    <>
+      {/* <div className="flex h-screen"> */}
+      <Routes>
+        <Route element={<GuestRoute />}>
+          <Route path='/login' element={<Login />} />
+        </Route>
+
+        <Route path="/portfolio/:userName" element={<Portfolio />} />
+        <Route path="/404" element={<NotFound />} />
+
+        <Route element={<ProtededRoute />}>
+          <Route path="/" element={<Index />}>
+            <Route path="/" element={<Home />} />
+
+            {/* Business Routes  */}
+            <Route element={<ProtededRoute allowedPermission="business" />}>
               <Route path="/business">
                 <Route path="add" element={<AddCustomer />} />
                 <Route path="plan" element={<SelectPlan type="business" />} />
@@ -103,8 +118,10 @@ const App = () => {
                 <Route path="updation" element={<CustomerUpdation />} />
                 <Route path="message" element={<Customer_Msg />} />
               </Route>
+            </Route>
 
-              {/* Plolitician Routes  */}
+            {/* Plolitician Routes  */}
+            <Route element={<ProtededRoute allowedPermission="politician" />}>
               <Route path="/politician">
                 <Route path="add" element={<AddPolitician />} />
                 <Route path="plan" element={<SelectPlan type="political" />} />
@@ -112,32 +129,42 @@ const App = () => {
                 <Route path="updation" element={<PoliticianUpdation />} />
                 <Route path="message" element={<Politician_Msg />} />
               </Route>
+            </Route>
 
-              {/* customer-portfolio Routeे  */}
+            {/* customer-portfolio Route  */}
+            <Route element={<ProtededRoute allowedPermission="portfolio" />}>
               <Route path="/portfolio">
                 <Route path="add" element={<AddPortfolio />} />
                 <Route path="manage" element={<ManagePortfolio />} />
               </Route>
+            </Route>
 
-              {/* Staff Routes  */}
+            {/* Staff Routes  */}
+            <Route element={<ProtededRoute allowedPermission="staff" />}>
               <Route path="/staff">
                 <Route path="add" element={<AddStaff />} />
                 <Route path="updation" element={<StaffUpdation />} />
               </Route>
+            </Route>
 
-              {/* Associate Routes  */}
+            {/* Associate Routes  */}
+            <Route element={<ProtededRoute allowedPermission="associate" />}>
               <Route path="/associate">
                 <Route path="add" element={<AddAssociate />} />
                 <Route path="updation" element={<AssociateUpdation />} />
               </Route>
+            </Route>
 
-              {/* Associate Routes  */}
-              <Route path="/associate">
-                <Route path="add" element={<AddAssociate />} />
-                <Route path="updation" element={<AssociateUpdation />} />
-              </Route>
+            {/* Associate Routes  */}
+            {/* <Route element={<ProtededRoute allowedPermission="associate" />}>
 
-              {/* Account Routes  */}
+            <Route path="/associate">
+              <Route path="add" element={<AddAssociate />} />
+              <Route path="updation" element={<AssociateUpdation />} />
+            </Route> */}
+
+            {/* Account Routes  */}
+            <Route element={<ProtededRoute allowedPermission="account" />}>
               <Route path="/account">
                 <Route path="staff-user-details" element={<StaffUserDetails />} />
                 <Route path="staff-payout" element={<StaffPayout />} />
@@ -150,64 +177,37 @@ const App = () => {
                 <Route path="associate-history" element={<AssociateHistory />} />
                 <Route path="reports" element={<AccountReport />} />
               </Route>
-
-              <Route path='/notification' element={<Notification />} />
-              <Route path='/configuration' element={<Configuration />} />
-              <Route path='/create-plan' element={<CreatePlan />} />
-              <Route path='/report' element={<Reports />} />
-              <Route path='/enquiry' element={<Enquiry />} />
-
-
-
-
-
-
             </Route>
+
+            <Route element={<ProtededRoute allowedPermission="notification" />}>
+              <Route path='/notification' element={<Notification />} />
+            </Route>
+
+            <Route element={<ProtededRoute allowedPermission="configuration" />}>
+              <Route path='/configuration' element={<Configuration />} />
+            </Route>
+
+            <Route element={<ProtededRoute allowedPermission="plan" />}>
+              <Route path='/create-plan' element={<CreatePlan />} />
+            </Route>
+
+            <Route element={<ProtededRoute allowedPermission="report" />}>
+              <Route path='/report' element={<Reports />} />
+            </Route>
+
+            <Route element={<ProtededRoute allowedPermission="enquiry" />}>
+              <Route path='/enquiry' element={<Enquiry />} />
+            </Route>
+
+           
+
           </Route>
-        </Routes>
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes >
 
-        {/* <Index /> */}
+      <ToastContainer position='top-right' autoClose={3000} theme='light' />
 
-
-
-        {/* Content Section with Top Padding to Prevent Overlapping */}
-        {/* <div className="flex-grow p-4 pt-16">
-          {activeContent === "home" && <Home />}
-          {activeContent === "addPolitician" && <AddPolitician />}
-          {activeContent === "employeeManagement" && <EmployeeManagement />}
-          {activeContent === "memberManagement" && <MemberManagement />}
-          {activeContent === "politicianUpdation" && <PoliticianUpdation />}
-          {activeContent === "configuration" && <Configuration />}
-          {activeContent === "notification" && <Notification />}
-          {activeContent === "addCustomer" && <AddCustomer />}
-          {activeContent === "customerUpdation" && <CustomerUpdation />}
-          {activeContent === "selectPlan" && <SelectPlan />}
-          {activeContent === "createPlan" && <CreatePlan />}
-          {activeContent === "customerMsg" && <Customer_Msg />}
-          {activeContent === "politicianMsg" && <Politician_Msg />}
-          {activeContent === "reports" && <Reports />}
-          {activeContent === "addStaff" && <AddStaff />}
-          {activeContent === "addAssociate" && <AddAssociate />}
-          {activeContent === "staffUpdation" && <StaffUpdation />}
-          {activeContent === "associateUpdation" && <AssociateUpdation />}
-
-
-            {activeContent === "associateUserDetails" && <AssociateUserDetails />}
-            {activeContent === "associatePayout" && <AssociatePayout history={history} setHistory={setHistory} />}
-            {activeContent === "associatePayoutsetting" && <AssociatePayoutSetting />}
-            {activeContent === "accountReport" && <AccountReport />}
-            {activeContent === "associateHistory" && <AssociateHistory history={history} />}
-            {activeContent === "staffUserDetails" && <StaffUserDetails />}
-            {activeContent === "staffPayoutsetting" && <StaffPayoutSetting />}
-            {activeContent === "staffHistory" && <StaffHistory history={history} />}
-            {activeContent === "staffPayout" && <StaffPayout history={history} setHistory={setHistory} />}
-            {activeContent === "enquiry" && <Enquiry />}
-          </div>  */}
-
-        {/* </div> */}
-        <ToastContainer position='top-right' autoClose={3000} theme='light' />
-
-      </BrowserRouter >
     </>
 
   );

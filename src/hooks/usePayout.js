@@ -8,6 +8,8 @@ export const useStaffPayout = () => {
         queryKey: ["staffPayout"],
         queryFn: getStaffPayout,
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 
@@ -26,6 +28,8 @@ export const useAssociatePayout = () => {
         queryKey: ["associatePayout"],
         queryFn: getAssociatePayout,
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 

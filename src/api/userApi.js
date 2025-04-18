@@ -128,8 +128,6 @@ export const getUserPlan = async (userId = null) => {
 //upsert user plan
 export const updateUserPlan = async (planId, userId) => {
     try {
-        console.log(planId, userId);
-
         const responce = await axios.post(`${apiUrl}/userplan/update-plan`, { planId, userId }, { withCredentials: true })
         return responce.data
     } catch (error) {

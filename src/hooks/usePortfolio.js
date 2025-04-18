@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addClients, addServices, createPortfolio, deletePortfolioItem, getPortfolio, updatePortfolio } from "../api/portfolioApi";
+import { addClients, addGallery, addServices, createPortfolio, deletePortfolio, deletePortfolioItem, getPortfolio, updatePortfolio, updateProfilePhoto } from "../api/portfolioApi";
 
 
 // Fetch Plans
@@ -8,6 +8,8 @@ export const usePortfolio = (id = null, userId = null, userName = null) => {
         queryKey: ["portfolio", id, userId, userName],
         queryFn: () => getPortfolio(id, userId, userName),
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 
@@ -33,10 +35,20 @@ export const useUpdatePortfolio = () => {
     })
 }
 
+export const useUpdateProfilePhoto = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ portfolioId, userId, profilePhoto }) => updateProfilePhoto(portfolioId, userId, profilePhoto),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['portfolio'])
+        }
+    })
+}
+
 export const useAddServices = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ portfolioId, userId, services }) => addServices(portfolioId, userId, services),
+        mutationFn: ({ portfolioId, services }) => addServices(portfolioId, services),
         onSuccess: () => {
             queryClient.invalidateQueries(['portfolio'])
         }
@@ -56,7 +68,7 @@ export const useAddClients = () => {
 export const useAddGallery = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ portfolioId, userId, gallery, files }) => addClients(portfolioId, userId, gallery, files),
+        mutationFn: ({ portfolioId, userId, gallery, files }) => addGallery(portfolioId, userId, gallery, files),
         onSuccess: () => {
             queryClient.invalidateQueries(['portfolio'])
         }
@@ -67,6 +79,15 @@ export const useDeletePortfolioItem = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: ({ portfolioId, itemId, type }) => deletePortfolioItem(portfolioId, itemId, type),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['portfolio'])
+        }
+    })
+}
+export const useDeletePortfolio = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (pid) => deletePortfolio(pid),
         onSuccess: () => {
             queryClient.invalidateQueries(['portfolio'])
         }

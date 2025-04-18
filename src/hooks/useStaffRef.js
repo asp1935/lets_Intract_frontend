@@ -8,6 +8,8 @@ export const useStaffRef = (userType) => {
         queryKey: ["staffRef", userType],
         queryFn: () => getStaffRefDetails(userType),
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 
@@ -16,6 +18,8 @@ export const useStaff = (staffId = null) => {
         queryKey: ['staffDetails', staffId],
         queryFn: () => getStaffDetails(staffId),
         staleTime: 5 * 60 * 1000,//cache for 5min 
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     })
 }
 
@@ -33,6 +37,8 @@ export const useGetRefCount = (id = null, referby = 'staff') => {
     return useQuery({
         queryKey: ['refCount', id, referby],
         queryFn: () => getReferralCount(id, referby),
-        staleTime: 5 * 60 * 1000
+        staleTime: 5 * 60 * 1000,
+        retry: false,             // Don't retry on failure
+        useErrorBoundary: false,  // Don't throw to error boundaries
     })
 }

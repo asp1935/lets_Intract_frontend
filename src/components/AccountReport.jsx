@@ -21,7 +21,7 @@ const AccountReport = () => {
     const [filteredMembers, setFilteredMembers] = useState([]);
     const [associates, setAssociates] = useState([]);
     const [staffs, setStaffs] = useState([])
-    
+
     const dispatch = useDispatch();
     const { data: associateData } = useAssociateRef();
     const { data: staffData } = useStaffRef();
@@ -421,47 +421,47 @@ const AccountReport = () => {
             dispatch(showToast({ message: "Please select a month.", type: "error" }));
             return;
         }
-    
+
         if (isLoading) {
             dispatch(showToast({ message: "Fetching report. Please wait...", type: "info" }));
             return;
         }
-    
+
         if (error) {
             dispatch(showToast({ message: error, type: "error" }));
             return;
         }
-    
+
         if (!data.data || Object.values(data.data).length === 0) {
             dispatch(showToast({ message: "No Record Available", type: "warn" }));
             return;
         }
-    
+
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.width;
         const title = `Monthly Report - ${selectedMonth} (${commissionType === 'with' ? 'With Commission/Incentive' : 'Without Commission/Incentive'})`;
         const titleX = (pageWidth - doc.getTextWidth(title)) / 2;
-    
+
         doc.setFont("helvetica", "bold");
         doc.setFontSize(16);
         doc.text(title, titleX, 10);
-    
+
         const tableColumn = commissionType === 'with'
             ? ["#", "Name", "Mobile", "Plan", "Refer By", "Commission", "Price"]
             : ["#", "Name", "Mobile", "Plan", "Refer By", "Price"];
-    
+
         let totalPrice = 0;
         let totalCommission = 0;
-    
+
         const tableRows = data.data.map((entry, index) => {
             const price = entry.planPrice || 0;
             const commission = entry.commission || 0;
-    
+
             totalPrice += price;
             if (commissionType === 'with') {
                 totalCommission += commission;
             }
-    
+
             return commissionType === 'with'
                 ? [
                     index + 1,
@@ -481,10 +481,10 @@ const AccountReport = () => {
                     price.toFixed(2),
                 ];
         });
-    
+
         // Calculate Net Profit
         const netProfit = totalPrice - totalCommission;
-    
+
         // Add Total Row with Background Color
         const totalRow = [
             { content: "Total", colSpan: commissionType === 'with' ? 5 : 5, styles: { fontStyle: "bold", halign: "right", fillColor: [200, 200, 200] } },
@@ -492,7 +492,7 @@ const AccountReport = () => {
             { content: totalPrice.toFixed(2), styles: { fontStyle: "bold", fillColor: [200, 200, 200] } },
         ];
         tableRows.push(totalRow);
-    
+
         // Add Net Profit Row with Different Background Color
         const netProfitRow = [
             { content: "Net Profit", colSpan: commissionType === 'with' ? 5 : 5, styles: { fontStyle: "bold", halign: "right", fillColor: [100, 200, 100] } },
@@ -500,7 +500,7 @@ const AccountReport = () => {
             { content: netProfit.toFixed(2), styles: { fontStyle: "bold", fillColor: [100, 200, 100] } },
         ];
         tableRows.push(netProfitRow);
-    
+
         autoTable(doc, {
             head: [tableColumn],
             body: tableRows,
@@ -510,10 +510,10 @@ const AccountReport = () => {
             alternateRowStyles: { fillColor: [240, 240, 240] },
             margin: { top: 10 },
         });
-    
+
         doc.save(`monthly_report.pdf`);
     };
-    
+
 
 
 
@@ -742,18 +742,22 @@ const AccountReport = () => {
                                 <thead className="bg-[#d64fcf] text-white">
                                     <tr>
                                         <th className="p-3 text-center">Name</th>
-                                        <th className="p-3 text-center">Mobile Number</th>
+                                        <th className="p-3 text-center">Email</th>
                                         <th className="p-3 text-center">Total Members</th>
+                                        <th className="p-3 text-left">Current Month Members Added</th>
                                         <th className="p-3 text-left">Incentive</th>
                                         <th className="p-3 text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {filteredStaffs.map((staff) => (
-                                        <tr key={staff.id} className="hover:bg-gray-50 transition-colors">
+                                        <tr key={staff._id} className="hover:bg-gray-50 transition-colors">
                                             <td className="p-3 text-center border-b border-gray-200">{staff.rname}</td>
                                             <td className="p-3 text-center border-b border-gray-200">{staff.remail}</td>
                                             <td className="p-3 text-center border-b border-gray-200">{staff.totalReferralCount}</td>
+                                            <td className="p-3 border-b border-gray-200">
+                                                {calculateCurrentMonthMembers(staff.referredUsers)}
+                                            </td>
                                             <td className="p-3 border-b border-gray-200">{staff.incentive}</td>
 
                                             <td className="p-3 text-center border-b border-gray-200">
@@ -919,7 +923,7 @@ const AccountReport = () => {
                                             })
                                             .map((person, index) => (
                                                 <tr
-                                                    key={person.id}
+                                                    key={person._id}
                                                     className="hover:bg-gray-50 transition-colors cursor-pointer"
                                                     onClick={() => setSelectedCustomer(person)}
                                                 >

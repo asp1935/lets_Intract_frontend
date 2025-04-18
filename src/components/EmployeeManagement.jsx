@@ -4,7 +4,7 @@ import { useDeleteUser, useResetUserKey, useUpdateVerfication, useUser, useUserP
 import { showToast } from "../redux/slice/ToastSlice";
 import { useDispatch } from "react-redux";
 import { useSendOtp } from "../hooks/useOtp";
-import { useAddMember,  useUpdateMember } from "../hooks/useMember";
+import { useAddMember, useUpdateMember } from "../hooks/useMember";
 import { getUserMembers } from "../api/memberApi";
 
 const EmployeeManagement = () => {
@@ -47,7 +47,7 @@ const EmployeeManagement = () => {
 
 
   useEffect(() => {
-    if (userData) {
+    if (userData?.data.length > 0) {
       const businessUsers = userData.data.filter((user) => user.type === "business" && user?.userPlans?.planDetails?.addMembers === true);
       setBusinessPersons(businessUsers);
     }
@@ -58,10 +58,10 @@ const EmployeeManagement = () => {
       setFilteredBusinessPersons(businessPersons || []);
       return;
     }
-    const result = businessPersons.filter(person =>
+    const result = businessPersons.length > 0 ? businessPersons.filter(person =>
       person.name?.toLowerCase().includes(businessPersonSearchTerm.toLowerCase()) ||
       person.mobile?.includes(businessPersonSearchTerm)
-    );
+    ) : [];
 
     setFilteredBusinessPersons(result);
   }, [businessPersons, businessPersonSearchTerm]);
@@ -74,7 +74,6 @@ const EmployeeManagement = () => {
         setEmployeeData(response.data);
 
         setShowEmployeeTable(true);
-        // console.log(response.data);
       } else {
         dispatch(showToast({ message: "No data found for this user." }));
       }
@@ -89,9 +88,9 @@ const EmployeeManagement = () => {
       return;
     }
 
-    const result = employeeData.filter((employee) =>
+    const result = employeeData.length > 0 ? employeeData.filter((employee) =>
       employee.name.toLowerCase().includes(employeeSearchTerm.toLowerCase()) ||
-      employee.mobile.toLowerCase().includes(employeeSearchTerm.toLowerCase()))
+      employee.mobile.toLowerCase().includes(employeeSearchTerm.toLowerCase())) : []
 
     setFilteredEmployees(result)
 
@@ -122,7 +121,6 @@ const EmployeeManagement = () => {
 
   const selectPerson = (person) => {
     setSelectedPerson(person);
-    console.log(person);
 
     setSelectedPlan(person.userPlans.planDetails);
     setSearchTerm("");

@@ -11,6 +11,11 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
         ownerName: "",
         email: "",
         mobile: "",
+        socialLinks: {
+            whatsapp: '',
+            instagram: '',
+            facebook: ''
+        },
         about: "",
         address: "",
         theme: "#3498db",
@@ -31,6 +36,11 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
                 ownerName: customer.name,
                 email: customer.email,
                 mobile: customer.mobile,
+                socialLinks: {
+                    whatsapp: '',
+                    instagram: '',
+                    facebook: ''
+                },
                 about: "",
                 address: "",
                 theme: "#3498db",
@@ -44,12 +54,23 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
-
-        setCustomerData({
-            ...customerData,
-            [name]: files ? files[0] : value,
-        });
+    
+        if (['whatsapp', 'instagram', 'facebook'].includes(name)) {
+            setCustomerData((prevData) => ({
+                ...prevData,
+                socialLinks: {
+                    ...prevData.socialLinks,
+                    [name]: value
+                }
+            }));
+        } else {
+            setCustomerData((prevData) => ({
+                ...prevData,
+                [name]: files ? files[0] : value
+            }));
+        }
     };
+    
 
     const validate = () => {
         let tempErrors = {};
@@ -97,7 +118,6 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
         }
 
         setErrors(tempErrors);
-        console.log(tempErrors);
 
         return Object.keys(tempErrors).length === 0;
     };
@@ -113,6 +133,11 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
                         ownerName: "",
                         email: "",
                         mobile: "",
+                        socialLinks: {
+                            whatsapp: '',
+                            instagram: '',
+                            facebook: ''
+                        },
                         about: "",
                         address: "",
                         theme: "#3498db",
@@ -163,6 +188,22 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
 
                 <input type="text" name="address" placeholder="Address" value={customerData.address} onChange={handleChange} className="w-full rounded p-2 border border-[#640D5F]" />
                 {errors.address && <p className="text-red-400 text-sm">{errors.address}</p>}
+
+                <div className='mt-3 flex  gap-1'>
+                    <div>
+                        <label className="text-[#640D5F] font-bold">Whatsapp :</label>
+                        <input type="url" name="whatsapp" placeholder="Whtasapp URL" value={customerData.socialLinks.whatsapp} onChange={handleChange} className="w-full rounded p-2 border  border-[#640D5F]" />
+                    </div>
+                    <div>
+                        <label className="text-[#640D5F] font-bold">Instagram :</label>
+                        <input type="url" name="instagram" placeholder="Instagram URL" value={customerData.socialLinks.instagram} onChange={handleChange} className="w-full rounded p-2 border  border-[#640D5F]" />
+                    </div>
+                    <div>
+                        <label className="text-[#640D5F] font-bold">Facebook :</label>
+                        <input type="url" name="facebook" placeholder="Facebook URL" value={customerData.socialLinks.facebook} onChange={handleChange} className="w-full rounded p-2 border  border-[#640D5F]" />
+                    </div>
+
+                </div>
                 <div className='mt-3'>
                     <label className="text-[#640D5F] font-bold">Select Default Theme :</label>
                     <div className='flex justify-evenly mt-2'>
@@ -193,6 +234,7 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
                     {errors.about && <p className="text-red-400 text-sm">{errors.about}</p>}
 
                 </div>
+
                 <div className='flex justify-center'>
                     <button type='submit' className='w-5/12 mt-4 mx-auto bg-[#aa1ba3] hover:bg-[#640D5F] text-white font-bold py-1.5 px-4 rounded-lg'>Submit</button>
                 </div>

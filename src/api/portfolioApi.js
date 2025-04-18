@@ -19,7 +19,7 @@ export const getPortfolio = async (id = null, userId = null, userName = null) =>
 
 export const createPortfolio = async (userData) => {
     try {
-        
+
         const formData = new FormData();
 
         formData.append('userId', userData.userId);
@@ -28,11 +28,12 @@ export const createPortfolio = async (userData) => {
         formData.append('about', userData.about);
         formData.append('email', userData.email);
         formData.append('mobile', userData.mobile);
+        formData.append('socialLinks', JSON.stringify(userData.socialLinks));
         formData.append('address', userData.address);
         formData.append('theme', userData.theme);
         formData.append('profilePhoto', userData.profilePhoto);
 
-        const responce = await axios.post(`${apiUrl}/portfolio/create-portfolio`,  formData , { withCredentials: true,headers:{"Content-Type":"multipart/form-data"} });
+        const responce = await axios.post(`${apiUrl}/portfolio/create-portfolio`, formData, { withCredentials: true, headers: { "Content-Type": "multipart/form-data" } });
         return responce.data;
 
     } catch (error) {
@@ -42,50 +43,64 @@ export const createPortfolio = async (userData) => {
 
 export const updatePortfolio = async (portfolioId, updatedData) => {
     try {
-        const { userName, name, ownerName, about, email, mobile, address, theme } = updatedData;
-        const responce = await axios.patch(`${apiUrl}/portfolio/update-portfolio/${portfolioId}`, { userName, name, ownerName, about, email, mobile, address, theme }, { withCredentials: true });
+        const { userName, name, ownerName, about, email, mobile, address, theme ,socialLinks} = updatedData;
+        const responce = await axios.patch(`${apiUrl}/portfolio/update-portfolio/${portfolioId}`, { userName, name, ownerName, about, email, mobile, address, theme,socialLinks }, { withCredentials: true });
         return responce.data;
     } catch (error) {
         throw error.response?.data?.message || 'Failed to Update Portfolio';
     }
 };
 
-export const addServices = async (portfolioId, userId, services) => {
+export const updateProfilePhoto = async (portfolioId, userId, profilePhoto) => {
     try {
-        const response = await axios.patch(`${apiUrl}/portfolio/add-portfolio-services/${portfolioId}`, { userId, services }, { withCredentials: true })
+        const formData = new FormData();
+        formData.append('userId', userId);
+        formData.append('profilePhoto', profilePhoto);
+        const response = await axios.patch(`${apiUrl}/portfolio/update-profilepic/${portfolioId}`, formData, { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } })
+        return response.data;
+
+    } catch (error) {
+        throw error.response?.data?.message || "Failed to Update Profile Photo"
+    }
+}
+
+export const addServices = async (portfolioId, services) => {
+    try {
+        const response = await axios.patch(`${apiUrl}/portfolio/add-portfolio-services/${portfolioId}`, { services }, { withCredentials: true })
         return response.data
     } catch (error) {
         throw error.response?.data?.message || "Failed to Add Services"
     }
-}
+};
 
 export const addClients = async (portfolioId, userId, clients, files) => {
     try {
-        const formData = new formData();
-        formData.append('userId', userId);
-        formData.append('clients'.JSON.stringfy(clients));
-        files.map(file => formData.append('images', file));
 
-        const responce = await axios.patch(`${apiUrl}/portfolio/add-portfolio-client/${portfolioId}`, { formData }, { withCredentials: true })
+        const formData = new FormData();
+        formData.append('userId', userId);
+        formData.append('clients', JSON.stringify(clients));
+        files.forEach(file => formData.append('images', file));
+
+        const responce = await axios.patch(`${apiUrl}/portfolio/add-portfolio-client/${portfolioId}`, formData, { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } })
         return responce.data;
     } catch (error) {
-        throw error.response?.data?.message || "Faild to Add Clients"
+        throw error.response?.data?.message || "Failed to Add Clients"
     }
-}
+};
 
 export const addGallery = async (portfolioId, userId, gallery, files) => {
     try {
-        const formData = new formData();
+        const formData = new FormData();
         formData.append('userId', userId);
-        formData.append('gallery'.JSON.stringfy(gallery));
-        files.map(file => formData.append('data', file));
+        formData.append('gallery', JSON.stringify(gallery));
+        files.forEach(file => formData.append('data', file));
 
-        const responce = await axios.patch(`${apiUrl}/portfolio/add-portfolio-client/${portfolioId}`, { formData }, { withCredentials: true })
+        const responce = await axios.patch(`${apiUrl}/portfolio/add-portfolio-gallery/${portfolioId}`, formData, { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } })
         return responce.data;
     } catch (error) {
         throw error.response?.data?.message || "Failed to Add Gallery Items"
     }
-}
+};
 
 export const deletePortfolioItem = async (portfolioId, itemId, type) => {
     try {
@@ -101,5 +116,14 @@ export const deletePortfolioItem = async (portfolioId, itemId, type) => {
     } catch (error) {
         throw error.response?.data?.message || `Failed to Delete ${type}`;
     }
-}
+};
+
+export const deletePortfolio = async (pid) => {
+    try {
+        const response = await axios.delete(`${apiUrl}/portfolio/delete-portfolio/${pid}`, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        throw error.response?.data?.message || 'Failed to Delete Portfolio';
+    }
+};
 

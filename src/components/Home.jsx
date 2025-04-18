@@ -305,20 +305,20 @@ const Home = () => {
                 <p className="text-4xl font-bold text-yellow-500 text-center" style={{ textShadow: "3px 3px 10px rgba(80, 20, 56, 1)" }}>{associateRefCnt?.totalReferrals || 0}</p>
               </div>
             </div>
-            <div className="flex justify-center mt-8">
+            {/* <div className="flex justify-center mt-8"> */}
               {/* <div className="flex flex-col items-center mx-4">
                 <p className="font-semibold text-white text-center">Current Month</p>
                 <p className="text-2xl text-white font-bold">60</p>
               </div> */}
-              <div className="flex flex-col items-center mx-4">
+              {/* <div className="flex flex-col items-center mx-4">
                 <p className="font-semibold text-white text-center">Business Users</p>
                 <p className="text-2xl text-white font-bold">40</p>
               </div>
               <div className="flex flex-col items-center mx-4">
                 <p className="font-semibold text-white text-center">Politician Users</p>
                 <p className="text-2xl text-white font-bold">20</p>
-              </div>
-            </div>
+              </div> */}
+            {/* </div> */}
           </div>
 
           {/* Card 6 */}
@@ -331,20 +331,20 @@ const Home = () => {
                 <p className="text-4xl font-bold text-yellow-500 text-center" style={{ textShadow: "3px 3px 10px rgba(80, 20, 56, 1)" }}>{staffRefCnt?.totalReferrals || 0}</p>
               </div>
             </div>
-            <div className="flex justify-center mt-8">
+            {/* <div className="flex justify-center mt-8"> */}
               {/* <div className="flex flex-col items-center mx-4">
                 <p className="font-semibold text-white text-center">Current Month</p>
                 <p className="text-2xl text-white font-bold">60</p>
               </div> */}
-              <div className="flex flex-col items-center mx-4">
+              {/* <div className="flex flex-col items-center mx-4">
                 <p className="font-semibold text-white text-center">Business Users</p>
                 <p className="text-2xl text-white font-bold">40</p>
               </div>
               <div className="flex flex-col items-center mx-4">
                 <p className="font-semibold text-white text-center">Politician Users</p>
                 <p className="text-2xl text-white font-bold">20</p>
-              </div>
-            </div>
+              </div> */}
+            {/* </div> */}
           </div>
 
           {/* Card 1 */}
@@ -356,20 +356,20 @@ const Home = () => {
                 <p className="text-4xl font-bold text-yellow-500" style={{ textShadow: "3px 3px 10px rgba(80, 20, 56, 1)" }}>300k</p>
               </div>
             </div>
-            <div className="flex justify-center mt-14">
+            {/* <div className="flex justify-center mt-14"> */}
               {/* <div className="flex flex-col items-center mx-4">
                 <p className="font-semibold text-white text-center">Current Month</p>
                 <p className="text-2xl text-white font-bold">60</p>
               </div> */}
-              <div className="flex flex-col items-center mx-4">
+              {/* <div className="flex flex-col items-center mx-4">
                 <p className="font-semibold text-white text-center">Total Paid</p>
                 <p className="text-2xl text-white font-bold">40</p>
               </div>
               <div className="flex flex-col items-center mx-4">
                 <p className="font-semibold text-white text-center">Total Unpaid</p>
                 <p className="text-2xl text-white font-bold">20</p>
-              </div>
-            </div>
+              </div> */}
+            {/* </div> */}
           </div>
 
           {/* Card 1 */}
@@ -381,20 +381,20 @@ const Home = () => {
                 <p className="text-4xl font-bold text-yellow-500" style={{ textShadow: "3px 3px 10px rgba(80, 20, 56, 1)" }}>800k</p>
               </div>
             </div>
-            <div className="flex justify-center mt-14">
+            {/* <div className="flex justify-center mt-14"> */}
               {/* <div className="flex flex-col items-center mx-4">
                 <p className="font-semibold text-white text-center">Current Month</p>
                 <p className="text-2xl text-white font-bold">60</p>
               </div> */}
-              <div className="flex flex-col items-center mx-4">
+              {/* <div className="flex flex-col items-center mx-4">
                 <p className="font-semibold text-white text-center">Business Users</p>
                 <p className="text-2xl text-white font-bold">40</p>
               </div>
               <div className="flex flex-col items-center mx-4">
                 <p className="font-semibold text-white text-center">Politician Users</p>
                 <p className="text-2xl text-white font-bold">20</p>
-              </div>
-            </div>
+              </div> */}
+            {/* </div> */}
           </div>
 
 
@@ -428,7 +428,7 @@ const Home = () => {
             </thead>
             <tbody>
               {expiringCustomers.map((customer) => (
-                <tr key={customer.id} className="hover:bg-[#f1d5ef]">
+                <tr key={customer._id} className="hover:bg-[#f1d5ef]">
                   <td className="border p-3">{customer.name}</td>
                   <td className="border p-3">{customer.email}</td>
                   <td className="border p-3">{customer.mobile}</td>

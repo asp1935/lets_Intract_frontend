@@ -183,7 +183,7 @@ const PoliticianUpdation = () => {
           {filteredPoliticians.length > 0 ? (
             filteredPoliticians.map((politician, index) => (
               <tr
-                key={politician.id}
+                key={politician._id}
                 className={`border border-[#640D5F] ${index % 2 === 0 ? "bg-gray-100" : "bg-white"} hover:bg-gray-200 transition`}
               >
                 <td className="p-3 border border-[#640D5F] text-center">{politician.name}</td>

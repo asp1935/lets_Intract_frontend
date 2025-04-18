@@ -3,6 +3,7 @@ import { FaSync, FaEdit } from "react-icons/fa"; // Import icons
 import { useAssociate, useUpdateAssoCommission } from "../hooks/useAssociate";
 import { useDispatch } from "react-redux";
 import { showToast } from "../redux/slice/ToastSlice";
+import { genrateAssociatePayout } from "../api/payoutApi";
 
 const AssociatePayoutSetting = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -10,18 +11,20 @@ const AssociatePayoutSetting = () => {
   const [commissionRate, setCommissionRate] = useState("");
   const [defaultCommission, setDefaultCommission] = useState(0);
   const [showDefaultCommissionField, setShowDefaultCommissionField] = useState(false);
+  const [confirmationInput, setConfirmationInput] = useState("");
+  const [showConfirmBox, setShowConfirmBox] = useState(false);
 
   const [associates, setAssociates] = useState([]);
 
 
 
   const dispatch = useDispatch();
-  const { data: associateData } = useAssociate();
+  const { data: associateData, refetch } = useAssociate();
 
   const updateAssoCommission = useUpdateAssoCommission();
 
   useEffect(() => {
-    if (associateData?.data) {
+    if (associateData?.data.length > 0) {
       setAssociates(associateData.data)
     }
   }, [associateData])
@@ -86,6 +89,42 @@ const AssociatePayoutSetting = () => {
       prevAssociates.map((associate) => ({ ...associate }))
     );
   };
+  const handleGenrate = () => {
+
+    associates.map(associate => {
+      if (associate.commission <= 0) {
+        dispatch(showToast({ message: 'All Asscoiate Commission Not Set You can update Commission', type: 'warn' }))
+        setShowConfirmBox(true);
+      }
+    })
+    setShowConfirmBox(true)
+  }
+  const handleConfirmGenrate = async () => {
+    if (confirmationInput.toLowerCase() !== "confirm") {
+      alert("Please enter 'confirm' to delete the record.");
+      return;
+    }
+    try {
+      const respose = await genrateAssociatePayout();
+      if (respose.statusCode === 201) {
+        setShowConfirmBox(false);
+        setConfirmationInput('');
+        await refetch()
+        dispatch(showToast({ message: 'Payout Genrated Successfully' }))
+      }
+      else if (respose.statusCode === 200) {
+        setShowConfirmBox(false);
+        setConfirmationInput('');
+        await refetch()
+        dispatch(showToast({ message: 'No Records For Payout', type: 'warn' }))
+      }
+    } catch (error) {
+      setShowConfirmBox(false);
+      setConfirmationInput('');
+      dispatch(showToast({ message: error, type: 'error' }))
+
+    }
+  }
 
   return (
     <div className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 shadow-lg rounded-lg">
@@ -186,7 +225,16 @@ const AssociatePayoutSetting = () => {
 
       {/* Associates Table */}
       <div className="mb-8">
-        <h3 className="text-xl font-semibold mb-4 text-[#640D5F]">Associates</h3>
+        <div className="flex justify-between items-baseline">
+          <h3 className="text-xl font-semibold mb-4 text-[#640D5F]">Associates</h3>
+          <button
+            className="px-4 py-2 bg-[#e22c2c] text-white font-bold rounded-lg hover:bg-[#c40909] transition-all"
+            onClick={handleGenrate}
+          >
+            Genrate Payout
+          </button>
+        </div>
+
         <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
           <thead className="bg-[#d64fcf] text-white">
             <tr>
@@ -227,6 +275,24 @@ const AssociatePayoutSetting = () => {
           </tbody>
         </table>
       </div>
+      {showConfirmBox && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-300">
+            <h2 className="text-xl font-semibold mb-4">Confirm Payout Genration</h2>
+            <p>Enter 'confirm' to Genrate Payout:</p>
+            <input
+              type="text"
+              value={confirmationInput}
+              onChange={(e) => setConfirmationInput(e.target.value)}
+              className="w-full p-2 border rounded-lg mb-4"
+            />
+            <div className="flex justify-center gap-5">
+              <button onClick={handleConfirmGenrate} className="bg-green-600   text-white px-4 py-2 rounded-lg">Genrate</button>
+              <button onClick={() => setShowConfirmBox(false)} className="bg-gray-300 text-black px-4 py-2 rounded-lg">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

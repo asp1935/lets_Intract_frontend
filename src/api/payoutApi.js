@@ -22,6 +22,15 @@ export const staffPayment = async (staffId, paymentData) => {
     }
 }
 
+export const genrateSaffPayout = async () => {
+    try {
+        const responce = await axios.get(`${apiUrl}/payout/genrate-staff-payout`, { withCredentials: true });
+        return responce.data;
+    } catch (error) {
+        throw error.response?.data?.message || 'Failed To Genrate Payout'
+    }
+}
+
 
 
 export const getAssociatePayout = async () => {
@@ -41,5 +50,14 @@ export const associatePayment = async (associateId, paymentData) => {
         return responce.data;
     } catch (error) {
         throw error.response?.data?.message || "Payment Failed";
+    }
+}
+
+export const genrateAssociatePayout = async () => {
+    try {
+        const responce = await axios.get(`${apiUrl}/payout/genrate-payout`, { withCredentials: true });
+        return responce.data;
+    } catch (error) {
+        throw error.response?.data?.message || 'Failed To Genrate Payout'
     }
 }
