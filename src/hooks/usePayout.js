@@ -5,11 +5,11 @@ import { associatePayment, getAssociatePayout, getStaffPayout, staffPayment } fr
 // Fetch payout
 export const useStaffPayout = () => {
     return useQuery({
-        queryKey: ["staffPayout"],
+        queryKey: ['staffPayout'],
         queryFn: getStaffPayout,
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-        retry: false,             // Don't retry on failure
-        useErrorBoundary: false,  // Don't throw to error boundaries
+        // retry: false,             // Don't retry on failure
+        // useErrorBoundary: false,  // Don't throw to error boundaries
     });
 };
 

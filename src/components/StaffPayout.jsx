@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useStaffPayment, useStaffPayout } from "../hooks/usePayout";
 import { useDispatch } from "react-redux";
 import { showToast } from "../redux/slice/ToastSlice";
@@ -7,26 +7,34 @@ const StaffPayout = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
   const [payment, setPayment] = useState({
     utr: '',
     paymentMode: ''
   });
 
   const dispatch = useDispatch();
-  const { data: staffData } = useStaffPayout();
+  const { data: staffData, refetch } = useStaffPayout();
 
   const staffPayment = useStaffPayment();
 
 
 
-  useEffect(() => {
-    if (staffData?.data.length>0) {
-      setUsers(staffData.data)
-    }
-  }, [staffData])
+  // useEffect(() => {
+  //   if (staffData?.data.length > 0) {
+  //     console.log(staffData);
 
-  const filteredUsers = users.length > 0 ? users?.filter(
+  //     setUsers(staffData.data)
+  //   }
+  // }, [staffData])
+
+  // const filteredUsers = users.length > 0 ? users?.filter(
+  //   (user) =>
+  //     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  // ) : [];
+
+  const filteredUsers = staffData?.data.length > 0 ? staffData?.data?.filter(
     (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -66,12 +74,15 @@ const StaffPayout = () => {
     }
     staffPayment.mutate(({ staffId: selectedUser._id, paymentData: payment }), {
       onSuccess: () => {
+        refetch();
+
         setIsModalOpen(false);
         setSelectedUser(null);
         setPayment({
           utr: '',
           paymentMode: ''
         })
+
         dispatch(showToast({ message: "Payment Successfully Done" }))
       },
       onError: (error) => dispatch(showToast({ message: error, type: 'error' })),

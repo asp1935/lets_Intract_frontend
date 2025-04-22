@@ -122,7 +122,7 @@ const AccountReport = () => {
     const handleDownloadAll = () => {
         const customer = selectedReport === 'Associate Report' ? associates : staffs;
 
-        if (customer.length < 0) {
+        if (customer.length <= 0) {
             dispatch(showToast({ message: "No Record Available", type: "warn" }))
             return;
         }
@@ -241,7 +241,7 @@ const AccountReport = () => {
                 user.email,
                 user.mobile,
                 user.type ? user.type === "political" ? "Politician" : "Businessman" : '',
-                user.type ? `${user.plan.type === "basic" ? "Basic" : "Advance"} + ${user.plan.name}` : '',
+                user.plan.type ? `${user.plan.type ? user.plan.type === "basic" ? "Basic" : "Advance" : 'NA'} + ${user.plan.name || 'NA'}` : 'N/A',
             ]);
 
             autoTable(doc, {
@@ -377,9 +377,9 @@ const AccountReport = () => {
         doc.text(customer.email, 60, y);
 
         doc.setFont("times", "bold");
-        doc.text(`${customer.type === 'business' ? 'Employee Count' : 'Member Cnt:'}`, 110, y);
+        doc.text(`${customer.type === 'business' ? 'Employee Count : ' : 'Member Cnt : '}`, 110, y);
         doc.setFont("times", "normal");
-        doc.text(customer.memberCount.toString(), 140, y);
+        doc.text(customer.memberCount.toString(), 145, y);
 
         y += 8;
         doc.setFont("times", "bold");
@@ -514,14 +514,10 @@ const AccountReport = () => {
         doc.save(`monthly_report.pdf`);
     };
 
-
-
-
-
     // Handle download all customers/politicians report
     const handleDownloadAllCustomersPoliticians = () => {
-        if (!filteredMembers || !filteredMembers.length === 0) {
-            dispatch(showToast({ message: "No Data Available" }))
+        if (!filteredMembers || filteredMembers.length === 0) {
+            dispatch(showToast({ message: "No Data Available", type: 'warn' }))
             return;
         }
 
@@ -658,15 +654,13 @@ const AccountReport = () => {
                                 <FaSearch className="absolute left-3 top-3 text-gray-400" />
                             </div>
                             <div className="relative group">
-                                <div
-                                    className="p-3 bg-[#640D5F] text-white rounded-lg shadow-md hover:bg-[#520a4a] transition-all cursor-pointer"
+                                <button
+                                    className="px-6 py-3 bg-[#640D5F] text-white rounded-lg shadow-md hover:bg-[#520a4a] transition-all focus:outline-none focus:ring-2 focus:ring-[#640D5F] focus:ring-offset-2 flex items-center gap-2"
                                     onClick={handleDownloadAll}
                                 >
-                                    <FaDownload className="text-xl" />
-                                </div>
-                                <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-black text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                                    Download All Reports
-                                </div>
+                                    <FaDownload className="text-xl" /> Download All Associate Report
+                                </button>
+
                             </div>
                         </div>
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAssociatePayment, useAssociatePayout } from "../hooks/usePayout";
 import { showToast } from "../redux/slice/ToastSlice";
 import { useDispatch } from "react-redux";
@@ -8,7 +8,7 @@ const AssociatePayout = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
 
   const [payment, setPayment] = useState({
     utr: '',
@@ -20,14 +20,14 @@ const AssociatePayout = () => {
   const associatePayment = useAssociatePayment();
 
 
-  useEffect(() => {
-    if (associateData?.data.length > 0) {
-      setUsers(associateData.data)
-    }
-  }, [associateData])
+  // useEffect(() => {
+  //   if (associateData?.data.length > 0) {
+  //     setUsers(associateData.data)
+  //   }
+  // }, [associateData])
 
 
-  const filteredUsers = users.length > 0 ? users.filter(
+  const filteredUsers = associateData?.data.length > 0 ? associateData?.data?.filter(
     (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.mobile.includes(searchTerm) ||
@@ -43,7 +43,7 @@ const AssociatePayout = () => {
   }
 
   const handlePayoutClick = (user) => {
-    
+
     setSelectedUser(user);
     setIsModalOpen(true);
   };

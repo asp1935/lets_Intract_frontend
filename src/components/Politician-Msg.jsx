@@ -32,7 +32,7 @@ const Politician_Msg = () => {
   const { data: politicianData } = useUser(null, 'user', 'political');
 
   useEffect(() => {
-    if (politicianData?.data) {
+    if (politicianData?.data.length > 0) {
       setPoliticians(politicianData.data);
       setFilteredPoliticians(politicianData.data);
     }
@@ -74,8 +74,15 @@ const Politician_Msg = () => {
   };
 
   const handleSubmit = (e, section) => {
+    e.preventDefault();
+
+    if (!selectedPolitician) {
+      dispatch(showToast({ message: "Politician Not Selected", type: 'warn' }))
+      return
+    }
     if (section === 'sms') {
       e.preventDefault();
+
       if (smsFormData.templeteName.trim() === '' || smsFormData.message.trim() === '') {
         dispatch(showToast({ message: "All Fields Are Required", type: 'warn' }))
         return
@@ -94,6 +101,7 @@ const Politician_Msg = () => {
     }
     if (section === 'whatsapp') {
       e.preventDefault();
+
       if (whatsappFormData.templeteName.trim() === '' || whatsappFormData.message.trim() === '') {
         dispatch(showToast({ message: "All Fields Are Required Image Optional", type: 'warn' }))
         return
@@ -131,7 +139,7 @@ const Politician_Msg = () => {
           onChange={handleSearch}
           className="w-full p-2 rounded-md border border-[#640D5F]"
         />
-         {showDropdown && searchQuery && (
+        {showDropdown && searchQuery && (
           <ul className="mt-2 bg-white border border-[#640D5F] rounded-md shadow-lg max-h-40 overflow-y-auto">
             {filteredPoliticians.map((politician) => (
               <li
@@ -208,58 +216,58 @@ const Politician_Msg = () => {
       )}
       {messageType === "WhatsApp Message" && (
 
-      < form onSubmit={(e) => handleSubmit(e, 'whatsapp')} className="space-y-4 mt-6">
-        {/* Template Name */}
-        <div>
-          <label className="text-[#640D5F] font-bold">Template Name:</label>
-          <input
-            type="text"
-            name="templeteName"
-            placeholder="Enter template name..."
-            value={whatsappFormData.templeteName}
-            onChange={handleWhatsappChange}
-            required
-            className="w-full p-2 rounded-md border border-[#640D5F]"
-          />
-        </div>
+        < form onSubmit={(e) => handleSubmit(e, 'whatsapp')} className="space-y-4 mt-6">
+          {/* Template Name */}
+          <div>
+            <label className="text-[#640D5F] font-bold">Template Name:</label>
+            <input
+              type="text"
+              name="templeteName"
+              placeholder="Enter template name..."
+              value={whatsappFormData.templeteName}
+              onChange={handleWhatsappChange}
+              required
+              className="w-full p-2 rounded-md border border-[#640D5F]"
+            />
+          </div>
 
-        {/* Message */}
-        <div>
-          <label className="text-[#640D5F] font-bold">Message:</label>
-          <textarea
-            name="message"
-            placeholder="Enter your message..."
-            value={whatsappFormData.message}
-            onChange={handleWhatsappChange}
-            required
-            className="w-full p-2 rounded-md border border-[#640D5F]"
-            rows="4"
-          />
-        </div>
+          {/* Message */}
+          <div>
+            <label className="text-[#640D5F] font-bold">Message:</label>
+            <textarea
+              name="message"
+              placeholder="Enter your message..."
+              value={whatsappFormData.message}
+              onChange={handleWhatsappChange}
+              required
+              className="w-full p-2 rounded-md border border-[#640D5F]"
+              rows="4"
+            />
+          </div>
 
-        {/* Image Upload (For WhatsApp Only) */}
+          {/* Image Upload (For WhatsApp Only) */}
 
-        <div>
-          <label className="text-[#640D5F] font-bold">Image (for WhatsApp only):</label>
-          <input
-            type="file"
-            name="whatsappImg"
-            accept="image/*"
-            onChange={handleWhatsappChange}
-            className="w-full p-2 rounded-md border border-[#640D5F]"
-          />
-        </div>
+          <div>
+            <label className="text-[#640D5F] font-bold">Image (for WhatsApp only):</label>
+            <input
+              type="file"
+              name="whatsappImg"
+              accept="image/*"
+              onChange={handleWhatsappChange}
+              className="w-full p-2 rounded-md border border-[#640D5F]"
+            />
+          </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-center w-full">
-          <button
-            type="submit"
-            className="bg-[#aa1ba3] hover:bg-[#640D5F] text-white font-bold w-40 p-2 rounded-md transition-all duration-300"
-          >
-            Create Message
-          </button>
-        </div>
-      </form>
+          {/* Submit Button */}
+          <div className="flex justify-center w-full">
+            <button
+              type="submit"
+              className="bg-[#aa1ba3] hover:bg-[#640D5F] text-white font-bold w-40 p-2 rounded-md transition-all duration-300"
+            >
+              Create Message
+            </button>
+          </div>
+        </form>
       )}
 
       {/* Success Dialog */}

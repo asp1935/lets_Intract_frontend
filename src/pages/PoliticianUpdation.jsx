@@ -53,7 +53,7 @@ const PoliticianUpdation = () => {
   const handleSearch = (event) => {
     const term = event.target.value.toLowerCase();
     setSearchTerm(term);
-    setFilteredPoliticians(politicians.filter((p) => p.name.toLowerCase().includes(term)));
+    setFilteredPoliticians(politicians.length > 0 ? politicians.filter((p) => p.name.toLowerCase().includes(term)) : []);
   };
 
   const handleEdit = (politician) => {

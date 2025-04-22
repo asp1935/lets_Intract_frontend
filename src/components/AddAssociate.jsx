@@ -4,6 +4,7 @@ import { useAddAssociate, useAssociate } from "../hooks/useAssociate";
 import { useDispatch } from "react-redux";
 import { showToast } from "../redux/slice/ToastSlice";
 import { useSendOtp } from "../hooks/useOtp";
+import { useDistrict, useTaluka } from "../hooks/useAddress";
 
 const AddAssociate = () => {
   const [associateData, setAssociateData] = useState({
@@ -23,16 +24,32 @@ const AddAssociate = () => {
   const [associateList, setAssociateList] = useState([]);
 
   const { data } = useAssociate();  // Fetch associates 
+
+  const [districts, setDistricts] = useState([]);
+  const [talukas, setTalukas] = useState([]);
+  const states = ["Maharastra"];
+  const { data: districtData } = useDistrict();
+  const { data: talukaData } = useTaluka(districts?.find(dist => dist?.districtnameenglish === associateData?.district)?.districtcode)
+
   // Set associateList once data is fetched
   useEffect(() => {
-    if (data) {
+    if (data?.data.length > 0) {
       setAssociateList(data.data);
     }
   }, [data]);
 
-  const states = ["State1", "State2", "State3"];
-  const districts = { State1: ["District1", "District2"], State2: ["District3"], State3: ["District4", "District5"] };
-  const talukas = { District1: ["Taluka1", "Taluka2"], District2: ["Taluka3"], District3: ["Taluka4"], District4: ["Taluka5"] };
+  useEffect(() => {
+    if (districtData?.length > 0) {
+      setDistricts(districtData);
+    }
+  }, [districtData])
+
+
+  useEffect(() => {
+    if (talukaData?.length > 0) {
+      setTalukas(talukaData);
+    }
+  }, [talukaData])
 
   const validate = () => {
     let tempErrors = {};
@@ -150,13 +167,13 @@ const AddAssociate = () => {
 
             <select name="district" value={associateData.district} onChange={handleChange} className="w-1/3 rounded p-2 border border-[#640D5F]" disabled={!associateData.state}>
               <option value="">Select District</option>
-              {districts[associateData.state]?.map((district) => (<option key={district} value={district}>{district}</option>))}
+              {associateData.state && districts?.map((district) => (<option key={district.districtcode} value={district.districtnameenglish}>{district.districtnameenglish}</option>))}
             </select>
             {errors.district && <p className="text-red-400 text-sm">{errors.district}</p>}
 
             <select name="taluka" value={associateData.taluka} onChange={handleChange} className="w-1/3 rounded p-2 border border-[#640D5F]" disabled={!associateData.district}>
               <option value="">Select Taluka</option>
-              {talukas[associateData.district]?.map((taluka) => (<option key={taluka} value={taluka}>{taluka}</option>))}
+              {associateData.district && talukas?.map((taluka) => (<option key={taluka.subdistrictcode} value={taluka.subdistrictnameenglish}>{taluka.subdistrictnameenglish}</option>))}
             </select>
             {errors.taluka && <p className="text-red-400 text-sm">{errors.taluka}</p>}
           </div>

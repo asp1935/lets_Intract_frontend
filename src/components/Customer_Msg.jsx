@@ -31,7 +31,7 @@ const Customer_Msg = () => {
   const { data: customerData } = useUser(null, 'user', 'business');
 
   useEffect(() => {
-    if (customerData?.data) {
+    if (customerData?.data.length > 0) {
       setCustomers(customerData.data);
       setFilteredCustomers(customerData.data);
     }
@@ -67,7 +67,7 @@ const Customer_Msg = () => {
   };
   const handleSmsChange = (e) => {
     const { name, value } = e.target;
-    setWhatsappFormData({
+    setSmsFormData({
       ...smsFormData,
       [name]: value,
     });
@@ -76,10 +76,15 @@ const Customer_Msg = () => {
   const handleSubmit = (e, section) => {
     if (section === 'sms') {
       e.preventDefault();
+      if (!selectedCustomer) {
+        dispatch(showToast({ message: 'Please Select Customer First', type: 'warn' }))
+        return
+      }
       if (smsFormData.templeteName.trim() === '' || smsFormData.message.trim() === '') {
         dispatch(showToast({ message: "All Fields Are Required", type: 'warn' }))
         return
       }
+
       addSmsTemplete.mutate({ userId: selectedCustomer._id, templeteData: smsFormData }, {
         onSuccess: () => {
           setSmsFormData({
@@ -94,16 +99,21 @@ const Customer_Msg = () => {
     }
     if (section === 'whatsapp') {
       e.preventDefault();
+      if (!selectedCustomer) {
+        dispatch(showToast({ message: "Customer Not Selected", type: 'warn' }))
+        return
+      }
       if (whatsappFormData.templeteName.trim() === '' || whatsappFormData.message.trim() === '') {
         dispatch(showToast({ message: "All Fields Are Required Image Optional", type: 'warn' }))
         return
       }
+
       addWhatsappTemplete.mutate({ userId: selectedCustomer._id, templeteData: whatsappFormData }, {
         onSuccess: () => {
           setSmsFormData({
             templeteName: "",
             message: "",
-            whatsappImg:null
+            whatsappImg: null
           })
           dispatch(showToast({ message: "Whatsapp Templete Added" }))
         },

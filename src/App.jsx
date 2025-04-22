@@ -71,7 +71,7 @@ const App = () => {
       const errorMessage = error.response?.data?.message || error.message || "Something went wrong";
 
       dispatch(showToast({ message: errorMessage, type: 'error' }));
-      window.alert(errorMessage);
+      // window.alert(errorMessage);
     }
     finally {
       setLoading(false)
@@ -199,7 +199,7 @@ const App = () => {
               <Route path='/enquiry' element={<Enquiry />} />
             </Route>
 
-           
+
 
           </Route>
         </Route>

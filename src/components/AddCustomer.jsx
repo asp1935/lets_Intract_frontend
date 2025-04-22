@@ -6,6 +6,7 @@ import { useSendOtp } from "../hooks/useOtp";
 import { showToast } from "../redux/slice/ToastSlice";
 import { useAdmin } from "../hooks/useAdmin";
 import { useAssociate } from "../hooks/useAssociate";
+import { useDistrict, useTaluka } from "../hooks/useAddress";
 
 const AddCustomer = () => {
   const [customerData, setCustomerData] = useState({
@@ -27,13 +28,24 @@ const AddCustomer = () => {
   const [selectedReferral, setSelectedRefferal] = useState(null);
   const [filteredStaff, setFilteredStaff] = useState([]);
   const [filteredAssociate, setFilteredAssociate] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [talukas, setTalukas] = useState([]);
+  const states = ["Maharastra"];
+  const { data: districtData } = useDistrict();
+  const { data: talukaData } = useTaluka(districts?.find(dist => dist?.districtnameenglish === customerData?.district)?.districtcode)
+
+  useEffect(() => {
+    if (districtData?.length > 0) {
+      setDistricts(districtData);
+    }
+  }, [districtData])
 
 
-  const states = ["State1", "State2", "State3"];
-  const districts = { State1: ["District1", "District2"], State2: ["District3"], State3: ["District4", "District5"] };
-  const talukas = { District1: ["Taluka1", "Taluka2"], District2: ["Taluka3"], District3: ["Taluka4"], District4: ["Taluka5"] };
-
-
+  useEffect(() => {
+    if (talukaData?.length > 0) {
+      setTalukas(talukaData);
+    }
+  }, [talukaData])
 
   const dispatch = useDispatch();
   const sendOtp = useSendOtp();
@@ -57,10 +69,11 @@ const AddCustomer = () => {
       return;
     }
 
-    const result = staffData?.data.length>0? staffData?.data?.filter(staffMember =>
+    const result = staffData?.data.length > 0 ? staffData?.data?.filter(staffMember =>
+      staffMember.role==='user' && (
       staffMember.name?.toLowerCase().includes(searchInput.toLowerCase()) ||
-      staffMember.mobile?.includes(searchInput)
-    ):[];
+      staffMember.mobile?.includes(searchInput))
+    ) : [];
 
     setFilteredStaff(result);
   }, [staffData, searchInput]);
@@ -243,12 +256,12 @@ const AddCustomer = () => {
             {errors.state && <p className="text-red-400 text-sm">{errors.state}</p>}
             <select name="district" value={customerData.district} onChange={handleChange} className="w-1/3 rounded p-2 border border-[#640D5F]" disabled={!customerData.state}>
               <option value="">District</option>
-              {customerData.state && districts[customerData.state]?.map((district) => (<option key={district} value={district}>{district}</option>))}
+              {customerData.state && districts?.map((district) => (<option key={district.districtcode} value={district.districtnameenglish}>{district.districtnameenglish}</option>))}
             </select>
             {errors.district && <p className="text-red-400 text-sm">{errors.district}</p>}
             <select name="taluka" value={customerData.taluka} onChange={handleChange} className="w-1/3 p-2 rounded border border-[#640D5F]" disabled={!customerData.district}>
               <option value="">Taluka</option>
-              {customerData.district && talukas[customerData.district]?.map((taluka) => (<option key={taluka} value={taluka}>{taluka}</option>))}
+              {customerData.district && talukas?.map((taluka) => (<option key={taluka.subdistrictcode} value={taluka.subdistrictnameenglish}>{taluka.subdistrictnameenglish}</option>))}
             </select>
             {errors.taluka && <p className="text-red-400 text-sm">{errors.taluka}</p>}
           </div>

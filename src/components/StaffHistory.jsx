@@ -60,12 +60,12 @@ const StaffHistory = () => {
     doc.setDrawColor(0); // Black border
     doc.setLineWidth(0.5);
     doc.rect(10, 15, pageWidth - 20, 12); // Border around title
-    
+
     // Set normal font for details
     doc.setFont("times", "normal");
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0); // Set labels to black
-    
+
     // Format content with bold labels
     let y = 40;
     const leftMargin = 60; // Align text properly
@@ -75,7 +75,7 @@ const StaffHistory = () => {
       ["Name:", `${entry.name}`],
       ["Referral Count:", entry.refCount],
       ["Commission:", `${entry.commission}`],
-      ["Amount:", `${ entry.amount}`],
+      ["Amount:", `${entry.amount}`],
       ["Payment Via:", entry.paymentMode],
     ];
 
@@ -146,7 +146,8 @@ const StaffHistory = () => {
           </select>
           <button
             onClick={handleDownloadAll}
-            className="flex items-center px-2 py-2 bg-[#640D5F] text-white rounded-md hover:bg-[#8A1C7C] transition-colors duration-200"
+            className="flex items-center px-2 py-2 bg-[#640D5F] text-white rounded-md hover:bg-[#8A1C7C] transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[#e22c2c]"
+            disabled={history?.length <= 0}
           >
             <FaDownload className="mr-2" />
             Download All

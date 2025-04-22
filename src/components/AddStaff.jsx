@@ -133,7 +133,7 @@ const AddStaff = () => {
                 <button
                   key={key}
                   type="button"
-                  className={`px-4 py-2 rounded-full border ${staffData.permissions.includes(key)
+                  className={`px-4 py-2 rounded-full border cursor-pointer ${staffData.permissions.includes(key)
                     ? "bg-pink-400 text-white border-gray-600"
                     : "border-gray-400 text-gray-500 bg-pink-100"
                     }`}

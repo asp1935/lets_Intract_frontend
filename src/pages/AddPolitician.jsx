@@ -5,6 +5,7 @@ import { useAdmin } from "../hooks/useAdmin";
 import { useAssociate } from "../hooks/useAssociate";
 import { useAddUser, useUser } from "../hooks/useUser";
 import { showToast } from "../redux/slice/ToastSlice";
+import { useDistrict, useTaluka } from "../hooks/useAddress";
 
 const AddPolitician = () => {
   const [politicianData, setPoliticianData] = useState({
@@ -27,7 +28,8 @@ const AddPolitician = () => {
   const [selectedReferral, setSelectedRefferal] = useState(null);
   const [filteredStaff, setFilteredStaff] = useState([]);
   const [filteredAssociate, setFilteredAssociate] = useState([]);
-
+  const [districts, setDistricts] = useState([]);
+  const [talukas, setTalukas] = useState([]);
 
   const dispatch = useDispatch();
   const sendOtp = useSendOtp();
@@ -38,14 +40,26 @@ const AddPolitician = () => {
   const { data: associateData } = useAssociate(); // Fetch associates 
 
 
-  const states = ["State1", "State2", "State3"];
-  const districts = { State1: ["District1", "District2"], State2: ["District3"], State3: ["District4", "District5"] };
-  const talukas = { District1: ["Taluka1", "Taluka2"], District2: ["Taluka3"], District3: ["Taluka4"], District4: ["Taluka5"] };
+  const states = ["Maharastra"];
+  const { data: districtData } = useDistrict();
+  const { data: talukaData } = useTaluka(districts?.find(dist => dist?.districtnameenglish === politicianData?.district)?.districtcode)
+
+  useEffect(() => {
+    if (districtData?.length > 0) {
+      setDistricts(districtData);
+    }
+  }, [districtData])
+
+  useEffect(() => {
+    if (talukaData?.length > 0) {
+      setTalukas(talukaData);
+    }
+  }, [talukaData])
 
 
 
   useEffect(() => {
-    if (data?.data.length>0) {
+    if (data?.data.length > 0) {
       setPoliticians(data.data)
     }
   }, [data])
@@ -56,16 +70,17 @@ const AddPolitician = () => {
       return;
     }
 
-    const result = staffData.data.length>0? staffData?.data?.filter(staffMember =>
-      staffMember.name?.toLowerCase().includes(searchInput.toLowerCase()) ||
-      staffMember.mobile?.includes(searchInput)
-    ):[];
+    const result = staffData.data.length > 0 ? staffData?.data?.filter(staffMember =>
+      staffMember.role === 'user' && (
+        staffMember.name?.toLowerCase().includes(searchInput.toLowerCase()) ||
+        staffMember.mobile?.includes(searchInput))
+    ) : [];
 
     setFilteredStaff(result);
   }, [staffData, searchInput]);
 
   useEffect(() => {
-    if (associateData?.data.length>0) {
+    if (associateData?.data.length > 0) {
       const result = associateData.data.filter(associate =>
         associate.name?.toLowerCase().includes(searchInput.toLowerCase()) ||
         associate.mobile?.includes(searchInput)
@@ -140,9 +155,9 @@ const AddPolitician = () => {
     if (!politicianData.taluka) {
       tempErrors.taluka = "Taluka is required";
     }
-    if(!selectedReferral){
-      dispatch(showToast({message:"Select Referance",type:'warn'}))
-      return 
+    if (!selectedReferral) {
+      dispatch(showToast({ message: "Select Referance", type: 'warn' }))
+      return
     }
 
     setErrors(tempErrors);
@@ -159,7 +174,7 @@ const AddPolitician = () => {
       addPolitician.mutate({ userData: politicianData, referBy: referencedBy, referId: selectedReferral._id }, {
         onSuccess: () => {
           dispatch(showToast({ message: " Registered Successfully!" }))
-          setPoliticianData({ name: "", email: "", mobile: "", password: "", district: "", taluka: "", state: "",otp:"",type:'political' });
+          setPoliticianData({ name: "", email: "", mobile: "", password: "", district: "", taluka: "", state: "", otp: "", type: 'political' });
           setErrors({});
           setReferencedBy("");
           setSearchInput("");
@@ -262,12 +277,12 @@ const AddPolitician = () => {
             {errors.state && <p className="text-red-400 text-sm">{errors.state}</p>}
             <select name="district" value={politicianData.district} onChange={handleChange} className="w-1/3 rounded p-2 border border-[#640D5F]" disabled={!politicianData.state}>
               <option value="">District</option>
-              {politicianData.state && districts[politicianData.state]?.map((district) => (<option key={district} value={district}>{district}</option>))}
+              {politicianData.state && districts?.map((district) => (<option key={district.districtcode} value={district.districtnameenglish}>{district.districtnameenglish}</option>))}
             </select>
             {errors.district && <p className="text-red-400 text-sm">{errors.district}</p>}
             <select name="taluka" value={politicianData.taluka} onChange={handleChange} className="w-1/3 p-2 rounded border border-[#640D5F]" disabled={!politicianData.district}>
               <option value="">Taluka</option>
-              {politicianData.district && talukas[politicianData.district]?.map((taluka) => (<option key={taluka} value={taluka}>{taluka}</option>))}
+              {politicianData.district && talukas?.map((taluka) => (<option key={taluka.subdistrictcode} value={taluka.subdistrictnameenglish}>{taluka.subdistrictnameenglish}</option>))}
             </select>
             {errors.taluka && <p className="text-red-400 text-sm">{errors.taluka}</p>}
           </div>
@@ -309,6 +324,9 @@ const AddPolitician = () => {
                         ))}
                       </ul>
                     )}
+                    {searchInput && filteredAssociate.length === 0 && (
+                      <p className="text-red-500 mt-2">No matching associates found.</p>
+                    )}
                   </div>
                 )}
 
@@ -321,11 +339,11 @@ const AddPolitician = () => {
                       onChange={handleSearchChange}
                       className="w-full rounded p-2 border border-[#640D5F]"
                     />
-                    {searchInput && filteredStaff.length > 0 && (
+                    {searchInput && filteredStaff.length > 0 ? (
                       <ul className="mt-2 border border-[#640D5F] rounded">
                         {filteredStaff.map(staffMember => (
                           <li
-                            key={staffMember.id}
+                            key={staffMember._id}
                             onClick={() => handleSelectReferral(staffMember)}
                             className="p-2 cursor-pointer hover:bg-[#ebace8]"
                           >
@@ -333,6 +351,8 @@ const AddPolitician = () => {
                           </li>
                         ))}
                       </ul>
+                    ) : (
+                      <p className="text-red-500 mt-2">No matching staff found.</p>
                     )}
                   </div>
                 )}

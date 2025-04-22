@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useStaff, useUpdateStaffIncentive } from "../hooks/useStaffRef";
 import { showToast } from "../redux/slice/ToastSlice";
 import { genrateSaffPayout } from "../api/payoutApi";
+import { useQueryClient } from '@tanstack/react-query';
 
 const StaffPayoutSetting = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,7 +16,7 @@ const StaffPayoutSetting = () => {
   const [showConfirmBox, setShowConfirmBox] = useState(false);
 
   const [staffs, setStaffs] = useState([]);
-
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const { data: staffData, refetch } = useStaff();
 
@@ -38,7 +39,12 @@ const StaffPayoutSetting = () => {
 
   // Handle setting a default incentive for all staffs
   const handleSetDefaultIncentive = () => {
-    if (isNaN(Number(defaultIncentive)) || defaultIncentive < 0) {
+
+    if (defaultIncentive === '' ||
+      defaultIncentive === null ||
+      isNaN(Number(defaultIncentive)) ||
+      defaultIncentive < 0
+    ) {
       dispatch(showToast({ message: 'Enter Valid Incentive', type: 'error' }))
       return;
     }
@@ -59,7 +65,12 @@ const StaffPayoutSetting = () => {
       dispatch(showToast({ message: "Please select an Staff", type: "warn" }))
       return;
     }
-    if (isNaN(Number(defaultIncentive)) || defaultIncentive < 0) {
+
+    if (incentiveRate === '' ||
+      incentiveRate === null ||
+      isNaN(Number(incentiveRate)) ||
+      incentiveRate < 0
+    ) {
       dispatch(showToast({ message: 'Enter Valid Incentive', type: 'error' }))
       return;
     }
@@ -96,7 +107,7 @@ const StaffPayoutSetting = () => {
       }
     })
     setShowConfirmBox(true)
-  } 
+  }
 
 
   const handleConfirmGenrate = async () => {
@@ -110,6 +121,7 @@ const StaffPayoutSetting = () => {
         setShowConfirmBox(false);
         setConfirmationInput('');
         await refetch()
+        queryClient.invalidateQueries({ queryKey: ['staffPayout'] });
         dispatch(showToast({ message: 'Payout Genrated Successfully' }))
       }
       else if (respose.statusCode === 200) {
@@ -134,8 +146,9 @@ const StaffPayoutSetting = () => {
         <div className="flex space-x-4">
           {/* Set Default Incentive Button */}
           <button
-            className="p-2 bg-[#640D5F] text-white rounded-lg hover:bg-[#520a4a] transition-all"
+            className={`p-2 bg-[#640D5F] text-white rounded-lg hover:bg-[#520a4a] transition-all disabled:${staffs.length <= 0 ? 'cursor-not-allowed opacity-40' : 'cursor-pointer'}`}
             onClick={() => setShowDefaultIncentiveField(!showDefaultIncentiveField)}
+            disabled={staffs.length <= 0}
           >
             Set Default Incentive
           </button>
@@ -226,8 +239,9 @@ const StaffPayoutSetting = () => {
         <div className="flex justify-between items-baseline">
           <h3 className="text-xl font-semibold mb-4 text-[#640D5F]">Staffs</h3>
           <button
-            className="px-4 py-2 bg-[#e22c2c] text-white font-bold rounded-lg hover:bg-[#c40909] transition-all"
+            className={`px-4 py-2 bg-[#e22c2c] text-white font-bold rounded-lg transition-all hover:bg-[#c40909] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[#e22c2c]`}
             onClick={handleGenrate}
+            disabled={staffs.length <= 0}
           >
             Genrate Payout
           </button>

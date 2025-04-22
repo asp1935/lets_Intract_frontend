@@ -4,6 +4,8 @@ import { useAssociate, useUpdateAssoCommission } from "../hooks/useAssociate";
 import { useDispatch } from "react-redux";
 import { showToast } from "../redux/slice/ToastSlice";
 import { genrateAssociatePayout } from "../api/payoutApi";
+import { useQueryClient } from '@tanstack/react-query';
+
 
 const AssociatePayoutSetting = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,6 +19,7 @@ const AssociatePayoutSetting = () => {
   const [associates, setAssociates] = useState([]);
 
 
+  const queryClient = useQueryClient();
 
   const dispatch = useDispatch();
   const { data: associateData, refetch } = useAssociate();
@@ -36,7 +39,11 @@ const AssociatePayoutSetting = () => {
 
   // Handle setting a default commission for all associates
   const handleSetDefaultCommission = () => {
-    if (isNaN(Number(defaultCommission)) || defaultCommission < 0) {
+    if (defaultCommission === '' ||
+      defaultCommission === null ||
+      isNaN(Number(defaultCommission)) ||
+      defaultCommission < 0
+    ) {
       dispatch(showToast({ message: 'Enter Valid Commission', type: 'error' }))
       return;
     }
@@ -60,7 +67,11 @@ const AssociatePayoutSetting = () => {
       dispatch(showToast({ message: "Please select an associate", type: "warn" }))
       return;
     }
-    if (isNaN(Number(defaultCommission)) || defaultCommission < 0) {
+    if (commissionRate === '' ||
+      commissionRate === null ||
+      isNaN(Number(commissionRate)) ||
+      commissionRate < 0
+    ) {
       dispatch(showToast({ message: 'Enter Valid Commission', type: 'error' }))
       return;
     }
@@ -110,6 +121,7 @@ const AssociatePayoutSetting = () => {
         setShowConfirmBox(false);
         setConfirmationInput('');
         await refetch()
+        queryClient.invalidateQueries({ queryKey: ['associatePayout'] });
         dispatch(showToast({ message: 'Payout Genrated Successfully' }))
       }
       else if (respose.statusCode === 200) {
@@ -134,8 +146,9 @@ const AssociatePayoutSetting = () => {
         <div className="flex space-x-4">
           {/* Set Default Commission Button */}
           <button
-            className="p-2 bg-[#640D5F] text-white rounded-lg hover:bg-[#520a4a] transition-all"
+            className="p-2 bg-[#640D5F] text-white rounded-lg hover:bg-[#520a4a] transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 "
             onClick={() => setShowDefaultCommissionField(!showDefaultCommissionField)}
+            disabled={associates.length <= 0}
           >
             Set Default Commission
           </button>
@@ -228,8 +241,9 @@ const AssociatePayoutSetting = () => {
         <div className="flex justify-between items-baseline">
           <h3 className="text-xl font-semibold mb-4 text-[#640D5F]">Associates</h3>
           <button
-            className="px-4 py-2 bg-[#e22c2c] text-white font-bold rounded-lg hover:bg-[#c40909] transition-all"
+            className="px-4 py-2 bg-[#e22c2c] text-white font-bold rounded-lg hover:bg-[#c40909] transition-all disabled:cursor-not-allowed disabled:opacity-40"
             onClick={handleGenrate}
+            disabled={associates.length <= 0}
           >
             Genrate Payout
           </button>

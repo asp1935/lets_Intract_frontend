@@ -149,7 +149,9 @@ const AssociateHistory = () => {
           </select>
           <button
             onClick={handleDownloadAll}
-            className="flex items-center px-2 py-2 bg-[#640D5F] text-white rounded-md hover:bg-[#8A1C7C] transition-colors duration-200"
+            className="flex items-center px-2 py-2 bg-[#640D5F] text-white rounded-md hover:bg-[#8A1C7C] transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[#e22c2c]"
+            disabled={history?.length <= 0}
+
           >
             <FaDownload className="mr-2" />
             Download All

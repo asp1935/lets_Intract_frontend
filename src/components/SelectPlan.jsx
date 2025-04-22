@@ -60,7 +60,7 @@ const SelectPlan = ({ type }) => {
       </h2>
 
       {/* Search Bar & User Details Card in a Flexbox */}
-      <div className="">
+      <div className="">  
         {/* Search and Dropdown */}
         <div className="relative w-1/2 mx-auto">
           <input

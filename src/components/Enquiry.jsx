@@ -15,7 +15,7 @@ const Enquiry = () => {
 
 
   useEffect(() => {
-    if (data?.data.length>0) {
+    if (data?.data.length > 0) {
       setEnquiry(data.data)
     }
   }, [data])
@@ -53,7 +53,7 @@ const Enquiry = () => {
     >
       <h1 className="text-3xl font-bold text-center text-[#640D5F] mb-6" style={{ textShadow: "3px 3px 10px rgba(100, 13, 95, 0.7)" }}
       >
-        Registered Members
+        Registered Enquiriesd  
       </h1>
       <div
         style={{

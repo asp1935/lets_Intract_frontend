@@ -3,9 +3,11 @@ import { FaEnvelope, FaLock } from "react-icons/fa"; // Import icons from react-
 import { login } from "../api/adminApi";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/slice/UserSlice";
+import { showToast } from "../redux/slice/ToastSlice";
 
 const Login = () => {
   const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -17,12 +19,16 @@ const Login = () => {
       const responce = await login(formData.email, formData.password);
       if (responce?.data) {
         dispatch(setUserData(responce.data.user))
+        setLoading(false)
         // dispatch(showToast({ message: `Welcome Back ${responce.data.role || 'User'}` }))
       }
 
     } catch (error) {
-      // dispatch(showToast({ message: error, type: 'error' }))
-      window.alert(error)
+
+      dispatch(showToast({ message: error.message, type: 'error' }))
+      setLoading(false)
+
+      // window.alert(error)
     }
   }
 
@@ -56,9 +62,13 @@ const Login = () => {
   };
 
   const handleSubmit = (e) => {
+    setLoading(true);
     e.preventDefault();
     if (validateForm()) {
       loginUser()
+    }
+    else {
+      setLoading(false)
     }
   };
 
@@ -126,9 +136,9 @@ const Login = () => {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#aa1ba3] hover:bg-[#640D5F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#aa1ba3] hover:bg-[#640D5F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${loading ? 'cursor-not-allowed disabled:bg-[#dc77d7]' : 'cursor-pointer'}`}
           >
-            LOGIN
+            {loading ? 'Logging in...' : 'LOGIN'}
           </button>
         </form>
 

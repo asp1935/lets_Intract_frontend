@@ -39,7 +39,7 @@ const Configuration = () => {
 
   const dispatch = useDispatch();
 
-  const { data: smsConfigData  } = useSmsConfig(selectedCustomer?._id || '')
+  const { data: smsConfigData } = useSmsConfig(selectedCustomer?._id || '')
   const { data: whatsappConfigData } = useWhatsappConfig(selectedCustomer?._id || '')
   const { data: apiUrlData } = useAPIUrlConfig();
   const upsertWhatsappConfig = useUpsertWhatsappConfig();
@@ -62,7 +62,7 @@ const Configuration = () => {
 
   useEffect(() => {
     if (smsConfigData?.data) {
-      setSmsConfig({ apiKey: smsConfigData.data.apiKey, senderId: smsConfigData.data.senderId, dcs: smsConfigData.data.channelNo, channelNo: smsConfigData.data.channelNo })
+      setSmsConfig({ apiKey: smsConfigData.data.apiKey, senderId: smsConfigData.data.senderId, dcs: smsConfigData.data.dcs, channelNo: smsConfigData.data.channelNo })
     }
     else {
       setSmsConfig({ apiKey: "", senderId: "", dcs: "", channelNo: "" })
@@ -114,10 +114,7 @@ const Configuration = () => {
 
 
   const handleSave = (section) => {
-    if (!selectedCustomer?._id) {
-      dispatch(showToast({ message: "Please Select Customer", type: "warn" }))
-      return
-    }
+
     if (section === "apiUrl") {
       if (apiUrls.whatsappApiUrl.trim() === '' || apiUrls.smsApiUrl.trim() === '') {
         dispatch(showToast({ message: "All Field are Required", type: 'warn' }))
@@ -130,6 +127,11 @@ const Configuration = () => {
         onError: (error) => dispatch(showToast({ message: error, type: 'error' })),
 
       })
+      return
+    }
+    if (!selectedCustomer?._id) {
+      dispatch(showToast({ message: "Please Select Customer", type: "warn" }))
+      return
     }
     if (section === 'whatsapp') {
       if (whatsappConfig.apiKey.trim() === '' || whatsappConfig.apiAuthKey.trim() === '' || whatsappConfig.channelNo.trim() === '') {
@@ -281,16 +283,16 @@ const Configuration = () => {
           <label className="block font-semibold">Channel</label>
           <input
             type="text"
-            value={smsConfig.dcs}
-            onChange={(e) => handleInputChange(e, "sms", "dcs")}
+            value={smsConfig.channelNo}
+            onChange={(e) => handleInputChange(e, "sms", "channelNo")}
             className="w-full p-3 border rounded-lg mb-4"
           />
 
           <label className="block font-semibold">DCS</label>
           <input
             type="text"
-            value={smsConfig.channelNo}
-            onChange={(e) => handleInputChange(e, "sms", "channelNo")}
+            value={smsConfig.dcs}
+            onChange={(e) => handleInputChange(e, "sms", "dcs")}
             className="w-full p-3 border rounded-lg"
           />
           {/* Save Button */}
