@@ -13,7 +13,7 @@ export const getDistricts = async () => {
 
 export const getTaluksByDistrict = async (distcode) => {
     try {
-        const response = await axios.post(`${apiUrl}/API/GetTalukasOfDistrict?distcode=${distcode}`);
+        const response = await axios.post(`${apiUrl}/.netlify/functions/proxy?distcode=${distcode}`);
         return response.data
     } catch (error) {
         throw error || 'Internal Server Error';
