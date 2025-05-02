@@ -16,6 +16,8 @@ const Sidebar = ({ onMenuClick }) => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isAssociateDetailsOpen, setIsAssociateDetailsOpen] = useState(false);
   const [isStaffDetailsOpen, setIsStaffDetailsOpen] = useState(false);
+  const [isConfigurationOpen, setIsConfigurationOpen] = useState(false);
+
 
   const dropdownVariants = {
     hidden: { opacity: 0, height: 0, overflow: "hidden" },
@@ -112,13 +114,13 @@ const Sidebar = ({ onMenuClick }) => {
           <button className="flex items-center justify-between w-full px-3 hover:bg-[#ebace8] rounded-md transition-all" onClick={() => setIsStaffOpen(!isStaffOpen)}>
             <span className="flex text-lg font-semibold py-2 items-center">
               <User className="w-5 h-5 mr-2 text-pink-600" />
-              {isSuperAdmin?'Employee Mnagement':'Staff Management'}
+              {isSuperAdmin ? 'Employee Management' : 'Staff Management'}
             </span>
             {isStaffOpen ? <ChevronDown /> : <ChevronRight />}
           </button>
           <motion.ul className="ml-4 mt-1 bg-[#fdfcfd] shadow-md rounded-lg" initial="hidden" animate={isStaffOpen ? "visible" : "hidden"} variants={dropdownVariants}>
-            <NavLink to='/staff/add'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >{isSuperAdmin?'Add Employee':'Add Staff'}</li></NavLink>
-            <NavLink to='/staff/updation'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >{isSuperAdmin?'Employee Updation':'Staff Updation'}</li></NavLink>
+            <NavLink to='/staff/add'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >{isSuperAdmin ? 'Add Employee' : 'Add Staff'}</li></NavLink>
+            <NavLink to='/staff/updation'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >{isSuperAdmin ? 'Employee Updation' : 'Staff Updation'}</li></NavLink>
           </motion.ul>
         </li>)}
 
@@ -182,6 +184,19 @@ const Sidebar = ({ onMenuClick }) => {
             <NavLink to='/account/reports'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md"  >Reports</li></NavLink>
           </motion.ul>
         </li>)}
+        {hasPermission('configuration') && (<li>
+          <button className="flex items-center justify-between w-full px-3 hover:bg-[#ebace8] rounded-md transition-all" onClick={() => setIsConfigurationOpen(!isConfigurationOpen)}>
+            <span className="flex text-lg font-semibold py-2 items-center">
+              <UserPlus className="w-5 h-5 mr-2 text-purple-600" />
+              SMS Configurtaion
+            </span>
+            {isAssociateOpen ? <ChevronDown /> : <ChevronRight />}
+          </button>
+          <motion.ul className="ml-4 mt-1 bg-[#fdfcfd] shadow-md rounded-lg" initial="hidden" animate={isConfigurationOpen ? "visible" : "hidden"} variants={dropdownVariants}>
+            <NavLink to='/configuration/sms-configuration'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >SMS API Configuration</li></NavLink>
+            <NavLink to='/configuration/sms-templete'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >SMS Templete</li></NavLink>
+          </motion.ul>
+        </li>)}
 
         {/* Notifications */}
         {hasPermission('notification') && (<NavLink to='/notification'>
@@ -193,12 +208,12 @@ const Sidebar = ({ onMenuClick }) => {
 
 
         {/* Configuration */}
-        {hasPermission('configuration') && (<NavLink to='/configuration'>
+        {/* {hasPermission('configuration') && (<NavLink to='/configuration'>
           <li className="py-2 flex items-center mt-0 px-3 text-lg font-semibold cursor-pointer hover:bg-[#ebace8] rounded-md" >
             <Settings className="w-5 h-5 mr-2 text-sky-900" />
             Configuration
           </li>
-        </NavLink>)}
+        </NavLink>)} */}
 
         {/* Create Plan */}
         {hasPermission('plan') && (<NavLink to='/create-plan'>

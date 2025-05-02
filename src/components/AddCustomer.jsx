@@ -70,9 +70,9 @@ const AddCustomer = () => {
     }
 
     const result = staffData?.data.length > 0 ? staffData?.data?.filter(staffMember =>
-      staffMember.role==='user' && (
-      staffMember.name?.toLowerCase().includes(searchInput.toLowerCase()) ||
-      staffMember.mobile?.includes(searchInput))
+      staffMember.role === 'user' && (
+        staffMember.name?.toLowerCase().includes(searchInput.toLowerCase()) ||
+        staffMember.mobile?.includes(searchInput))
     ) : [];
 
     setFilteredStaff(result);
@@ -239,7 +239,7 @@ const AddCustomer = () => {
 
           <div className="flex items-center space-x-2">
             <input type="tel" name="mobile" placeholder="Mobile Number" value={customerData.mobile} onChange={handleChange} className="flex-1/2 rounded p-2 border border-[#640D5F]" />
-            <button type="button" onClick={handleGetOtp} className="w-1/3 bg-[#e762e1] text-white cursor-pointer p-2 rounded-md">Get OTP</button>
+            <button type="button" onClick={handleGetOtp} className="w-1/3 bg-[#e762e1] text-white cursor-pointer p-2 rounded-md disabled:cursor-progress" disabled={sendOtp.isPending}>{sendOtp.isPending ? 'Sending OTP' : 'Get OTP'}</button>
             <input type="text" name='otp' placeholder="Enter OTP" value={customerData.otp} onChange={handleChange} className="w-1/3 rounded p-2 border border-[#640D5F]" />
           </div>
           {errors.mobile && <p className="text-red-400 text-sm">{errors.mobile}</p>}
@@ -349,7 +349,7 @@ const AddCustomer = () => {
           </div>
 
           <div className="flex justify-center w-full">
-            <button type="submit" className="w-40 bg-[#aa1ba3] hover:bg-[#640D5F] font-bold text-white p-2 mt-5 rounded-md">Add Customer</button>
+            <button type="submit" className="w-40 bg-[#aa1ba3] hover:bg-[#640D5F] font-bold text-white p-2 mt-5 rounded-md cursor-progress disabled:cursor-progress " disabled={addUser.isPending}>{addUser.isPending ? 'Adding...' : 'Add Customer'}</button>
           </div>
         </form>
       </div>

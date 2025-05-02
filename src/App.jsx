@@ -44,6 +44,8 @@ import AddPortfolio from "./pages/AddPortfolio";
 import ManagePortfolio from "./pages/ManagePortfolio";
 import Portfolio from "./pages/Portfolio";
 import NotFound from "./pages/NotFound";
+import SMSConfiguration from "./components/SMSConfiguration";
+import SmsTemplete from "./components/SmsTemplete";
 
 const App = () => {
 
@@ -184,7 +186,12 @@ const App = () => {
             </Route>
 
             <Route element={<ProtededRoute allowedPermission="configuration" />}>
-              <Route path='/configuration' element={<Configuration />} />
+              {/* <Route path='/configuration' element={<Configuration />} /> */}
+              <Route path="/configuration">
+                <Route path='sms-configuration' element={<SMSConfiguration />} />
+                <Route path='sms-templete' element={<SmsTemplete />} />
+                
+              </Route>
             </Route>
 
             <Route element={<ProtededRoute allowedPermission="plan" />}>
