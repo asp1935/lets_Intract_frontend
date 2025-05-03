@@ -260,7 +260,14 @@ const AddPolitician = () => {
 
           <div className="flex items-center space-x-2">
             <input type="tel" name="mobile" placeholder="Mobile Number" value={politicianData.mobile} onChange={handleChange} className="flex-1/2 rounded p-2 border border-[#640D5F]" />
-            <button type="button" onClick={handleGetOtp} className="w-1/3 bg-[#e762e1] text-white cursor-pointer p-2 rounded-md">Get OTP</button>
+            <button
+              type="button"
+              onClick={handleGetOtp}
+              className="w-1/3 bg-[#e762e1] text-white cursor-pointer p-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={sendOtp.isPending}
+            >
+              {sendOtp.isPending ? "Sending OTP" : "Get OTP"}
+            </button>
             <input type="text" name='otp' placeholder="Enter OTP" value={politicianData.otp} onChange={handleChange} className="w-1/3 rounded p-2 border border-[#640D5F]" />
           </div>
           {errors.mobile && <p className="text-red-400 text-sm">{errors.mobile}</p>}
@@ -369,7 +376,13 @@ const AddPolitician = () => {
           </div>
 
           <div className="flex justify-center w-full">
-            <button type="submit" className="w-40 bg-[#aa1ba3] hover:bg-[#640D5F] font-bold text-white p-2 mt-5 rounded-md">Add Politician</button>
+            <button
+              type="submit"
+              className="w-40 bg-[#aa1ba3] hover:bg-[#640D5F] font-bold text-white p-2 mt-5 rounded-md disabled:"
+              disabled={addPolitician.isPending}
+            >
+              {addPolitician.isPending ? "Adding..." : "Add Politician"}
+            </button>
           </div>
         </form>
       </div>

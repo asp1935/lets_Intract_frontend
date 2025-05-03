@@ -178,7 +178,7 @@ const StaffUpdation = () => {
             </div>
           </div>
           <div className="flex mt-3 justify-center w-full">
-            <button onClick={handleUpdate} className="w-60 bg-[#9b1694] text-white p-3 rounded-lg font-bold hover:bg-[#9b1690]">Update</button>
+            <button onClick={handleUpdate} className="w-60 bg-[#9b1694] text-white p-3 rounded-lg font-bold hover:bg-[#9b1690] disabled:opacity-50 disabled:cursor-not-allowed" disabled={updateStaff.isPending} >{updateStaff.isPending ? "Updating" : "Update"}</button>
           </div>
         </div>
       )}
@@ -223,7 +223,7 @@ const StaffUpdation = () => {
               className="w-full p-2 border rounded-lg mb-4"
             />
             <div className="flex justify-center gap-5">
-              <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded-lg">Delete</button>
+              <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled={deleteStaff.isPending} >{deleteStaff.isPending ? "Deleteing" : "Delete"}</button>
               <button onClick={() => setShowDeleteConfirm(false)} className="bg-gray-300 text-black px-4 py-2 rounded-lg">Cancel</button>
             </div>
           </div>

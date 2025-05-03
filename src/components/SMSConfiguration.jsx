@@ -102,9 +102,10 @@ function SMSConfiguration() {
                 <div className="flex justify-center w-full mt-6">
                     <button
                         onClick={handleSave}
-                        className="w-fit   bg-[#98188f] text-white p-3 rounded-lg font-bold hover:bg-[#4e0c4a] transition duration-200"
+                        className="w-fit   bg-[#98188f] text-white p-3 rounded-lg font-bold hover:bg-[#4e0c4a] transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={upsertSmsAPI.isPending}
                     >
-                        Assign SMS API
+                        {upsertSmsAPI.isPending ? "Assigning SMS API..." : "Assign SMS API"}
                     </button>
                 </div>
             </div>

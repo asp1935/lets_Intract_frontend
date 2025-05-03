@@ -4,9 +4,11 @@ import { useDeletePortfolioItem } from '../../hooks/usePortfolio';
 import { showToast } from '../../redux/slice/ToastSlice';
 import AddClients from './AddClients';
 
-function Clients({uid, pid, clientsData }) {
+function Clients({ uid, pid, clientsData }) {
     const [addClients, setAddClients] = useState(false);
     const [clients, setClients] = useState([]);
+    const [deletingId, setDeletingId] = useState(null);
+
     const url = import.meta.env.VITE_IMG_URL;
 
 
@@ -20,6 +22,8 @@ function Clients({uid, pid, clientsData }) {
     }, [clientsData])
 
     const handleDeleteClient = (id) => {
+        setDeletingId(id);
+
         deleteClient.mutate({ portfolioId: pid, itemId: id, type: "clients" }, {
             onSuccess: (data) => {
                 setClients(data?.data?.clients)
@@ -27,6 +31,8 @@ function Clients({uid, pid, clientsData }) {
             },
             onError: (error) => dispatch(showToast({ message: error, type: 'error' }))
         })
+        setDeletingId(null);
+
     }
 
     return (
@@ -66,9 +72,12 @@ function Clients({uid, pid, clientsData }) {
                                     <td className="py-2 px-4 border">
                                         <button
                                             onClick={() => handleDeleteClient(client._id)}
-                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                                            disabled={deletingId === client._id}
+
                                         >
-                                            Delete
+                                            {deletingId === client._id ? "Deleteing" : "Delete"}
+
                                         </button>
                                     </td>
                                 </tr>

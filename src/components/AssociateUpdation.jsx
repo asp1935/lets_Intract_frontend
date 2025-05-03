@@ -28,7 +28,7 @@ const AssociateUpdation = () => {
 
   // Set associateList once data is fetched
   useEffect(() => {
-    if (data?.data?.length>0) {
+    if (data?.data?.length > 0) {
       setAssociates(data.data);
     }
   }, [data]);
@@ -113,10 +113,10 @@ const AssociateUpdation = () => {
     if (confirmationInput.toLowerCase() !== "confirm") {
       alert("Please enter 'confirm' to delete the record.");
       return;
-    } 
-    
+    }
 
-    deleteAssociate.mutate(deleteAssociateId , {
+
+    deleteAssociate.mutate(deleteAssociateId, {
       onSuccess: () => {
         setShowDeleteConfirm(false);
         setDeleteAssociateId(null);
@@ -164,7 +164,7 @@ const AssociateUpdation = () => {
           {errors.taluka && <p className="text-red-400 text-sm">{errors.taluka}</p>}
 
           <div className="flex mt-3 justify-center w-full">
-            <button onClick={handleUpdate} className="w-60 bg-[#9b1694] text-white p-3 rounded-lg font-bold hover:bg-[#9b1690]">Update</button>
+            <button onClick={handleUpdate} className="w-60 bg-[#9b1694] text-white p-3 rounded-lg font-bold hover:bg-[#9b1690] disabled:opacity-50 disabled:cursor-not-allowed" disabled={updateAssociate.isPending}>{updateAssociate.isPending ? "Updating" : "Update"}</button>
           </div>
         </div>
       )}
@@ -207,9 +207,10 @@ const AssociateUpdation = () => {
             />
             <button
               onClick={handleDelete}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={deleteAssociate.isPending}
             >
-              Confirm
+              {deleteAssociate.isPending ? "Deleteing..." : "Confirm"}
             </button>
             <button
               onClick={() => setShowDeleteConfirm(false)}

@@ -400,9 +400,10 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                             <button
                                 type='button'
                                 onClick={handleSave}
-                                className='bg-green-500 text-white px-3 py-0.5 rounded hover:bg-green-600 shadow-md transition-transform transform hover:scale-105'
+                                className='bg-green-500 text-white px-3 py-0.5 rounded hover:bg-green-600 shadow-md transition-transform transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed'
+                                disabled={updateBasicDetails.isPending}
                             >
-                                Save
+                                {updateBasicDetails.isPending ? "Saving..." : "Save"}
                             </button>
                         </div>
                     ) : (
@@ -448,9 +449,10 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                             </div>
                             <button
                                 onClick={handleUpdatePhoto}
-                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition mt-5 "
+                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition mt-5 disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={updatePortfolioPhoto.isPending}
                             >
-                                Confirm
+                                {updatePortfolioPhoto.isPending ? "Updating..." : "Confirm"}
                             </button>
                             <button
                                 onClick={() => { setFileUploadOpen(false); setNewProfilePic(null) }}

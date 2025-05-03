@@ -24,7 +24,7 @@ const CustomerUpdation = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordCustomerId, setPasswordCustomerId] = useState(null);
   const [newPassword, setNewPassword] = useState("");
-
+  const [resetKeyId, setResetKeyID] = useState(null);
   // const resetPassword = "reset@123"; // Default password for reset
 
   const dispatch = useDispatch();
@@ -109,12 +109,14 @@ const CustomerUpdation = () => {
 
   // Handle Reset Key
   const handleResetKey = (id) => {
+    setResetKeyID(id)
     resetUserKey.mutate(id, {
       onSuccess: () => {
         dispatch(showToast({ message: 'Customer key has been reset' }))
       },
       onError: (error) => dispatch(showToast({ message: error, type: 'error' }))
     })
+    setResetKeyID(null)
   }
 
   // Handle Toggle Verification
@@ -168,7 +170,7 @@ const CustomerUpdation = () => {
             <option key='political' value="political">Political</option>
           </select>
           <div className="flex mt-3 justify-center w-full">
-            <button onClick={handleUpdate} className="w-60 bg-[#9b1694] text-white p-3 rounded-lg font-bold hover:bg-[#9b1690]">Update</button>
+            <button onClick={handleUpdate} className="w-60 bg-[#9b1694] text-white p-3 rounded-lg font-bold hover:bg-[#9b1690]" disabled={updateBusinessman.isPending}>{updateBusinessman.isPending ? "Upadating..." : "Update"}</button>
           </div>
         </div>
       )}
@@ -202,8 +204,8 @@ const CustomerUpdation = () => {
                   <button onClick={() => { setPasswordCustomerId(customer._id); setShowPasswordModal(true); }} className="bg-[#A0C878] text-white px-3 py-1 rounded-lg hover:bg-[#8eb16ae5] transition mr-2">
                     Update Password
                   </button>
-                  <button onClick={() => handleResetKey(customer._id)} className="bg-[#54B4D3] text-white px-3 py-1 rounded-lg hover:bg-[#5a8fa1] transition">
-                    Reset Key
+                  <button onClick={() => handleResetKey(customer._id)} className="bg-[#54B4D3] text-white px-3 py-1 rounded-lg hover:bg-[#5a8fa1] transition disabled:opacity-50 disabled:cursor-not-allowed" disabled={resetKeyId === customer._id}>
+                    {resetKeyId === customer._id ? "Resetting..." : "Reset Key"}
                   </button>
                 </td>
                 <td className="p-3 border border-[#640D5F] text-center">
@@ -212,6 +214,7 @@ const CustomerUpdation = () => {
                       type="checkbox"
                       checked={customer.verified}
                       onChange={() => handleToggleVerification(customer._id, customer.verified)}
+                      disabled={updateVerifiaction.isPending}
                     />
                     <span className="slider round"></span>
                   </label>
@@ -240,9 +243,10 @@ const CustomerUpdation = () => {
             />
             <button
               onClick={handleDelete}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={deleteBusinessman.isPending}
             >
-              Confirm
+              {deleteBusinessman.isPending ? "Deleting..." : "Confirm"}
             </button>
             <button
               onClick={() => setShowDeleteConfirm(false)}
@@ -284,9 +288,10 @@ const CustomerUpdation = () => {
             />
             <button
               onClick={handleUpdatePassword}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition disabled:opacity-50 disabled:hover:bg-blue-500"
+              disabled={updatePassword.isPending}
             >
-              Update Password
+              {updatePassword.isPending ? "Updating..." : "Update Password"}
             </button>
             <button
               onClick={() => setShowPasswordModal(false)}

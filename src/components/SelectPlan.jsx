@@ -185,9 +185,10 @@ const SelectPlan = ({ type }) => {
       <div className="flex justify-center w-full">
         <button
           onClick={handleSubmit}
-          className="w-40 bg-[#aa1ba3] hover:bg-[#640D5F] font-bold text-white p-2 mt-5 rounded-md"
+          className="w-40 bg-[#aa1ba3] hover:bg-[#640D5F] font-bold text-white p-2 mt-5 rounded-md disabled:opacity-50 disabled:cursor-not-allowed" 
+          disabled={upsertUserPlan.isPending}
         >
-          Confirm Plan
+          {upsertUserPlan.isPending?"Confirming Plan":"Confirm Plan"}
         </button>
       </div>
     </div>

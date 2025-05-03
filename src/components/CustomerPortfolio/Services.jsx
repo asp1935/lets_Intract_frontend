@@ -7,18 +7,20 @@ import { showToast } from '../../redux/slice/ToastSlice';
 function Services({ servicesData, pid }) {
     const [addService, setAddService] = useState(false);
     const [services, setServices] = useState([]);
+    const [deletingId, setDeletingId] = useState(null);
 
     const dispatch = useDispatch();
 
     const deleteService = useDeletePortfolioItem();
 
-    
+
     useEffect(() => {
         setServices(servicesData)
 
     }, [servicesData])
-
+    
     const handleDeleteService = (id) => {
+        setDeletingId(id);
         deleteService.mutate({ portfolioId: pid, itemId: id, type: "services" }, {
             onSuccess: (data) => {
                 setServices(data?.data?.services)
@@ -26,6 +28,7 @@ function Services({ servicesData, pid }) {
             },
             onError: (error) => dispatch(showToast({ message: error, type: 'error' }))
         })
+        setDeletingId(null);
     }
 
     return (
@@ -61,9 +64,10 @@ function Services({ servicesData, pid }) {
                                     <td className="py-2 px-4 border">
                                         <button
                                             onClick={() => handleDeleteService(service._id)}
-                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                                            disabled={deletingId === service._id }
                                         >
-                                            Delete
+                                            {deletingId === service._id ? "Deleteing" : "Delete"}
                                         </button>
                                     </td>
                                 </tr>

@@ -147,7 +147,13 @@ const AddStaff = () => {
           </div>
 
           <div className="flex justify-center w-full">
-            <button type="submit" className="w-40 bg-[#aa1ba3] hover:bg-[#640D5F] font-bold text-white p-2 mt-5 rounded-md">{isSuperAdmin ? 'Add Employee' : 'Add Staff'}</button>
+            <button
+              type="submit"
+              className="w-40 bg-[#aa1ba3] hover:bg-[#640D5F] font-bold text-white p-2 mt-5 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={addStaff.isPending}
+            >
+              {addStaff.isPending ? "Adding " : "Add "}{isSuperAdmin ? 'Employee' : 'Staff'}
+            </button>
           </div>
         </form>
       </div>

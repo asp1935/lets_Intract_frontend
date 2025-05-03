@@ -8,6 +8,8 @@ import AddGallery from './AddGallery';
 function Gallery({ uid, pid, galleryData }) {
     const [addGallery, setAddGallery] = useState(false);
     const [galleryItem, setGalleryItem] = useState([]);
+    const [deletingId, setDeletingId] = useState(null);
+
     const url = import.meta.env.VITE_IMG_URL;
 
 
@@ -21,6 +23,8 @@ function Gallery({ uid, pid, galleryData }) {
     }, [galleryData])
 
     const handleDeleteGalleryItem = (id) => {
+        setDeletingId(id);
+
         deleteGalleryItem.mutate({ portfolioId: pid, itemId: id, type: "gallery" }, {
             onSuccess: (data) => {
                 setGalleryItem(data?.data?.gallery)
@@ -28,6 +32,8 @@ function Gallery({ uid, pid, galleryData }) {
             },
             onError: (error) => dispatch(showToast({ message: error, type: 'error' }))
         })
+        setDeletingId(null);
+
     }
     return (
         <div className={`w-9/12 mx-auto place-items-center p-4 rounded my-5 border bg-] relative `}>
@@ -69,7 +75,7 @@ function Gallery({ uid, pid, galleryData }) {
 
                                         ) : (
                                             item?.url ? (
-                                                <a href={item?.url ? `${url}${item.url}` : '../../assets/profile.jpg'} target='_blank' className='hover:text-blue-700'>View Video <ExternalLink className='inline-block w-5'/> </a>
+                                                <a href={item?.url ? `${url}${item.url}` : '../../assets/profile.jpg'} target='_blank' className='hover:text-blue-700'>View Video <ExternalLink className='inline-block w-5' /> </a>
                                             ) : (
                                                 <p>Video Not Available</p>
 
@@ -81,9 +87,11 @@ function Gallery({ uid, pid, galleryData }) {
                                     <td className="py-2 px-4 border">
                                         <button
                                             onClick={() => handleDeleteGalleryItem(item._id)}
-                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                                            disabled={deletingId === item._id}
+
                                         >
-                                            Delete
+                                            {deletingId === item._id ? "Deleteing" : "Delete"}
                                         </button>
                                     </td>
                                 </tr>

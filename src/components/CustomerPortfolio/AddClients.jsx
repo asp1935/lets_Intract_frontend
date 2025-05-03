@@ -3,10 +3,12 @@ import { useDispatch } from 'react-redux';
 import { useAddClients } from '../../hooks/usePortfolio';
 import { showToast } from '../../redux/slice/ToastSlice';
 import { X } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
+
 
 function AddClients({ setAddClients, uid, pid, onClientAdded }) {
     const [clients, setClients] = useState([
-        { file: null, name: '' }
+        { id: uuidv4(), file: null, name: '' }
     ]);
 
     const dispatch = useDispatch();
@@ -28,7 +30,7 @@ function AddClients({ setAddClients, uid, pid, onClientAdded }) {
     // Add a new blank clients (max 5 allowed)
     const addNewClients = () => {
         if (clients.length < 5) {
-            setClients([...clients, { file: null, name: '' }]);
+            setClients([...clients, { id: uuidv4(), file: null, name: '' }]);
         }
     };
 
@@ -36,6 +38,8 @@ function AddClients({ setAddClients, uid, pid, onClientAdded }) {
     const removeService = (index) => {
         const updatedClients = clients.filter((_, i) => i !== index);
         setClients(updatedClients);
+        console.log(updatedClients);
+
     };
     const validate = () => {
         for (let client of clients) {
@@ -52,7 +56,7 @@ function AddClients({ setAddClients, uid, pid, onClientAdded }) {
         if (validate()) {
             const files = clients.map(client => client.file);
             const clientData = clients.map(client => ({ name: client.name }));
-    
+
             addClients.mutate({ userId: uid, portfolioId: pid, clients: clientData, files }, {
                 onSuccess: (data) => {
                     setAddClients(false);
@@ -63,7 +67,7 @@ function AddClients({ setAddClients, uid, pid, onClientAdded }) {
             });
         }
     };
-    
+
     return (
         <div className='w-full my-5  bg-white shadow-xl rounded-xl border overflow-clip'>
             <div className='flex justify-between p-2 bg-[#fb52c3] '>
@@ -74,7 +78,7 @@ function AddClients({ setAddClients, uid, pid, onClientAdded }) {
             <div className='w-10/12 mx-auto'>
                 <div className='p-5 space-y-6'>
                     {clients.map((client, index) => (
-                        <div key={index} className='relative border p-4 rounded space-y-4 shadow'>
+                        <div key={client.id} className='relative border p-4 rounded space-y-4 shadow'>
                             {clients.length > 0 && (
                                 <button
                                     onClick={() => removeService(index)}
@@ -85,7 +89,7 @@ function AddClients({ setAddClients, uid, pid, onClientAdded }) {
                             )}
                             <div className='flex flex-col'>
                                 <label htmlFor={`name-${index}`}>Client Name</label>
-                                <input 
+                                <input
                                     type='text'
                                     name="name"
                                     id={`name-${index}`}
@@ -126,7 +130,7 @@ function AddClients({ setAddClients, uid, pid, onClientAdded }) {
 
             <div className='flex gap-3 justify-end p-3'>
                 <button className='border px-3 py-1 rounded bg-red-500 hover:bg-red-600 text-white' onClick={() => setAddClients(false)}>Cancel</button>
-                <button className='border px-3 py-1 rounded bg-green-500 hover:bg-green-600 text-white font-sembold' onClick={handleSubmitClients}>Save</button>
+                <button className='border px-3 py-1 rounded bg-green-500 hover:bg-green-600 text-white font-sembold disabled:opacity-50 disabled:cursor-not-allowed' disabled={addClients.isPending} onClick={handleSubmitClients} >{addClients.isPending ? "Saving..." : "Save"}</button>
             </div>
         </div>
     )

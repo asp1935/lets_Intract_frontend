@@ -356,10 +356,11 @@ const EmployeeManagement = () => {
 
               <div className="flex items-center space-x-2 my-2 mt-2">
                 <button
-                  className="bg-blue-500 w-1/2 text-white px-4 py-2 rounded hover:bg-blue-600 shadow-md transition-transform transform hover:scale-105"
+                  className="bg-blue-500 w-1/2 text-white px-4 py-2 rounded hover:bg-blue-600 shadow-md transition-transform transform hover:scale-105 disabled:opacity-50 disabled:cursor-none disabled:hover:scale-100"
                   onClick={handleGetOtp}
+                  disabled={sendOtp.isPending}
                 >
-                  Get OTP
+                  {sendOtp.isPending ? "Sending OTP..." : "Get OTP"}
                 </button>
                 <input
                   type="text"
@@ -386,10 +387,11 @@ const EmployeeManagement = () => {
 
               <div className="flex justify-center mt-4">
                 <button
-                  className="bg-[#aa1ba3] text-white px-4 py-2 rounded hover:bg-green-600 shadow-md transition-transform transform hover:scale-105"
+                  className="bg-[#aa1ba3] text-white px-4 py-2 rounded hover:bg-green-600 shadow-md transition-transform transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
                   onClick={handleSubmitNewEmployee}
+                  disabled={addMember.isPending}
                 >
-                  Submit
+                  {addMember.isPending ? "Submitting..." : "Submit"}
                 </button>
               </div>
             </div>

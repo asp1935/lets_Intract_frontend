@@ -53,7 +53,7 @@ const Enquiry = () => {
     >
       <h1 className="text-3xl font-bold text-center text-[#640D5F] mb-6" style={{ textShadow: "3px 3px 10px rgba(100, 13, 95, 0.7)" }}
       >
-        Registered Enquiriesd  
+        Registered Enquiriesd
       </h1>
       <div
         style={{
@@ -111,7 +111,7 @@ const Enquiry = () => {
                     {member.status !== 'approved' && (
                       <button
                         onClick={() => handleDone(member._id)}
-                        className='ml-8'
+                        className='ml-8 disabled:opacity-50 disabled:cursor-not-allowed'
                         style={{
                           padding: '8px 16px',
                           backgroundColor: '#6c5ce7',
@@ -125,14 +125,15 @@ const Enquiry = () => {
                             backgroundColor: '#5a4dbf',
                           },
                         }}
+                        disabled={updateEnquiry.isPending}
                       >
-                        Done
+                        {updateEnquiry.isPending ? "Updating..." : "Done"}
                       </button>
                     )}
                     {member.status === 'approved' && (
                       <button
                         onClick={() => handleDelete(member._id)}
-                        className='ml-8'
+                        className='ml-8 disabled:opacity-50 disabled:cursor-not-allowed'
                         style={{
                           padding: '8px 16px',
                           backgroundColor: '#f0566f',
@@ -146,8 +147,9 @@ const Enquiry = () => {
                             backgroundColor: '#5a4dbf',
                           },
                         }}
+                        disabled={deleteEnquiry.isPending}
                       >
-                        Delete
+                        {deleteEnquiry.isPending ? "Deleting" : "Delete"}
                       </button>
                     )}
                   </td>

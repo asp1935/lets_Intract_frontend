@@ -211,9 +211,10 @@ const Customer_Msg = () => {
           <div className="flex justify-center w-full">
             <button
               type="submit"
-              className="bg-[#aa1ba3] hover:bg-[#640D5F] text-white font-bold w-40 p-2 rounded-md transition-all duration-300"
+              className="bg-[#aa1ba3] hover:bg-[#640D5F] text-white font-bold w-40 p-2 rounded-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={addSmsTemplete.isPending}
             >
-              Create Message
+              {addSmsTemplete.isPending ? "Creating Message" : "Create Message"}
             </button>
           </div>
         </form>
@@ -268,8 +269,9 @@ const Customer_Msg = () => {
             <button
               type="submit"
               className="bg-[#aa1ba3] hover:bg-[#640D5F] text-white font-bold w-40 p-2 rounded-md transition-all duration-300"
+              disabled={addWhatsappTemplete.isPending}
             >
-              Create Message
+              {addWhatsappTemplete ? "Creating Message" : "Create Message"}
             </button>
           </div>
         </form>

@@ -92,7 +92,7 @@ function SmsTemplete() {
 
                 <button
                     type="submit"
-                    className="bg-[#640D5F] text-white py-2 px-4 rounded hover:bg-[#500a46] transition "
+                    className="bg-[#640D5F] text-white py-2 px-4 rounded hover:bg-[#500a46] transition disabled:opacity-50 disabled:cursor-not-allowed "
                     disabled={upsertTemplete.isPending}
                 >
                     {upsertTemplete.isPending ? "Updating Template" : "Update Template"}

@@ -3,10 +3,11 @@ import { useDispatch } from 'react-redux'
 import { useAddGallery } from '../../hooks/usePortfolio';
 import { showToast } from '../../redux/slice/ToastSlice';
 import { X } from 'lucide-react';
+import { v4 as uuid4 } from 'uuid';
 
 function AddGallery({ uid, setAddGallery, pid, onGalleryAdded }) {
     const [galleryItems, setGalleryItems] = useState([
-        { file: null, type: 'img', title: '' }
+        { id: uuid4(), file: null, type: 'img', title: '' }
     ])
 
     const dispatch = useDispatch();
@@ -27,7 +28,7 @@ function AddGallery({ uid, setAddGallery, pid, onGalleryAdded }) {
     // Add a new blank items (max 5 allowed)
     const addNewGalleryItem = () => {
         if (galleryItems.length < 5) {
-            setGalleryItems([...galleryItems, { file: null, type: 'img', name: '' }]);
+            setGalleryItems([...galleryItems, { id: uuid4(), file: null, type: 'img', name: '' }]);
         }
     };
 
@@ -86,7 +87,7 @@ function AddGallery({ uid, setAddGallery, pid, onGalleryAdded }) {
             <div className='w-10/12 mx-auto'>
                 <div className='p-5 space-y-6'>
                     {galleryItems.map((item, index) => (
-                        <div key={index} className='relative border p-4 rounded space-y-4 shadow'>
+                        <div key={item.id} className='relative border p-4 rounded space-y-4 shadow'>
                             {galleryItems.length > 0 && (
                                 <button
                                     onClick={() => removeItem(index)}
@@ -154,7 +155,7 @@ function AddGallery({ uid, setAddGallery, pid, onGalleryAdded }) {
 
             <div className='flex gap-3 justify-end p-3'>
                 <button className='border px-3 py-1 rounded bg-red-500 hover:bg-red-600 text-white' onClick={() => setAddGallery(false)}>Cancel</button>
-                <button className='border px-3 py-1 rounded bg-green-500 hover:bg-green-600 text-white font-sembold' onClick={handleSubmitGalleryItem}>Save</button>
+                <button className='border px-3 py-1 rounded bg-green-500 hover:bg-green-600 text-white font-sembold disabled:opacity-50 disabled:cursor-not-allowed' disabled={addGalleryItem.isPending} onClick={handleSubmitGalleryItem}>{addGalleryItem.isPending ? "Saving..." : "Save"}</button>
             </div>
         </div>
     )

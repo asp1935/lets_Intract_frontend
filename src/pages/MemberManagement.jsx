@@ -356,10 +356,11 @@ const MemberManagement = () => {
 
               <div className="flex items-center space-x-2 my-2 mt-2">
                 <button
-                  className="bg-blue-500 w-1/2 text-white px-4 py-2 rounded hover:bg-blue-600 shadow-md transition-transform transform hover:scale-105"
+                  className="bg-blue-500 w-1/2 text-white px-4 py-2 rounded hover:bg-blue-600 shadow-md transition-transform transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   onClick={handleGetOtp}
+                  disabled={sendOtp.isPending}
                 >
-                  Get OTP
+                  {sendOtp.isPending ? "Sending OTP" : "Get OTP"}
                 </button>
                 <input
                   type="text"
@@ -388,8 +389,9 @@ const MemberManagement = () => {
                 <button
                   className="bg-[#aa1ba3] text-white px-4 py-2 rounded hover:bg-green-600 shadow-md transition-transform transform hover:scale-105"
                   onClick={handleSubmitNewMember}
+                  disabled={addMember.isPending}
                 >
-                  Submit
+                  {addMember.isPending ? "Submitting" : "Submit"}
                 </button>
               </div>
             </div>
@@ -507,10 +509,11 @@ const MemberManagement = () => {
                         <td className="border px-4 py-2">
                           {editIndex === actualIndex ? (
                             <button
-                              className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 shadow-md transition-transform transform hover:scale-105"
+                              className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 shadow-md transition-transform transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                               onClick={() => setEditMembers(member._id, member.userId)}
+                              disabled={updateMember.isPending}
                             >
-                              Save
+                              {updateMember.isPending ? "Saving..." : "Save"}
                             </button>
                           ) : (
                             <>
@@ -521,16 +524,18 @@ const MemberManagement = () => {
                                 Edit
                               </button>
                               <button
-                                className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 shadow-md transition-transform transform hover:scale-105 ml-2"
+                                className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 shadow-md transition-transform transform hover:scale-105 ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 onClick={() => handleAction("delete", actualIndex, member)}
+                                disabled={deleteMember.isPending}
                               >
-                                Delete
+                                {deleteMember.isPending ? "Deleting" : "Delete"}
                               </button>
                               <button
-                                className="bg-[#0dcaf0] text-white px-2 py-1 rounded hover:bg-[#0dcaf0d4] shadow-md transition-transform transform hover:scale-105 ml-2"
+                                className="bg-[#0dcaf0] text-white px-2 py-1 rounded hover:bg-[#0dcaf0d4] shadow-md transition-transform transform hover:scale-105 ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 onClick={() => handleAction("reset", actualIndex, member)}
+                                disabled={resetMemberKey.isPending}
                               >
-                                Reset Key
+                                {resetMemberKey.isPending ? "Resetting..." : "Reset Key"}
                               </button>
                             </>
                           )}

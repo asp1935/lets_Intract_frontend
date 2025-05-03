@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { showToast } from '../../redux/slice/ToastSlice';
 import { useAddServices } from '../../hooks/usePortfolio';
 
-function AddServices({ setAddService, pid, onServiceAdded  }) {
+function AddServices({ setAddService, pid, onServiceAdded }) {
     const [services, setServices] = useState([
         { title: '', description: '' }
     ]);
@@ -120,7 +120,7 @@ function AddServices({ setAddService, pid, onServiceAdded  }) {
 
             <div className='flex gap-3 justify-end p-3'>
                 <button className='border px-3 py-1 rounded bg-red-500 hover:bg-red-600 text-white' onClick={() => setAddService(false)}>Cancel</button>
-                <button className='border px-3 py-1 rounded bg-green-500 hover:bg-green-600 text-white font-sembold' onClick={handleSubmitServices}>Save</button>
+                <button className='border px-3 py-1 rounded bg-green-500 hover:bg-green-600 text-white font-sembold disabled:opacity-50 disabled:cursor-not-allowed' disabled={addServices.isPending} onClick={handleSubmitServices}>{addServices.isPending ? "Saving..." : "Save"}</button>
             </div>
         </div>
     );

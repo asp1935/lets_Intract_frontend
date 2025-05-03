@@ -54,7 +54,7 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
-    
+
         if (['whatsapp', 'instagram', 'facebook'].includes(name)) {
             setCustomerData((prevData) => ({
                 ...prevData,
@@ -70,7 +70,7 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
             }));
         }
     };
-    
+
 
     const validate = () => {
         let tempErrors = {};
@@ -236,10 +236,15 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
                 </div>
 
                 <div className='flex justify-center'>
-                    <button type='submit' className='w-5/12 mt-4 mx-auto bg-[#aa1ba3] hover:bg-[#640D5F] text-white font-bold py-1.5 px-4 rounded-lg'>Submit</button>
+                    <button
+                        type='submit'
+                        className='w-5/12 mt-4 mx-auto bg-[#aa1ba3] hover:bg-[#640D5F] text-white font-bold py-1.5 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed'
+                        disabled={addPortfolio.isPending}
+                    >
+                        {addPortfolio.isPending ? "Submitting" : "Submit"}
+                    </button>
                 </div>
             </form>
-
         </div>
     )
 }

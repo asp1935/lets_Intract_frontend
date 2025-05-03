@@ -20,7 +20,7 @@ function ManagePortfolio() {
 
 
   useEffect(() => {
-    if (portfolioData?.data.length > 0) {
+    if (portfolioData?.data && portfolioData?.data.length > 0) {
       setportfolios(portfolioData.data)
     }
   }, [portfolioData])
@@ -60,8 +60,8 @@ function ManagePortfolio() {
 
     })
   }
-  const handleViewClick=(userName)=>{
-    window.open(`/portfolio/${userName}`,'_blank')
+  const handleViewClick = (userName) => {
+    window.open(`/portfolio/${userName}`, '_blank')
   }
 
   return (
@@ -111,8 +111,8 @@ function ManagePortfolio() {
                       </button>
 
                       <button className='bg-white px-2 py-1 rounded shadow-md transition-transform transform hover:scale-105 border'
-                      onClick={()=>{handleViewClick(portfolioUser.userName)}}>
-                        View <ExternalLink className='inline-block'/>
+                        onClick={() => { handleViewClick(portfolioUser.userName) }}>
+                        View <ExternalLink className='inline-block' />
                       </button>
                     </div>
                   </td>
