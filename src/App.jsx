@@ -46,6 +46,7 @@ import Portfolio from "./pages/Portfolio";
 import NotFound from "./pages/NotFound";
 import SMSConfiguration from "./components/SMSConfiguration";
 import SmsTemplete from "./components/SmsTemplete";
+import OtpList from "./components/OtpList";
 
 const App = () => {
 
@@ -190,6 +191,7 @@ const App = () => {
               <Route path="/configuration">
                 <Route path='sms-configuration' element={<SMSConfiguration />} />
                 <Route path='sms-templete' element={<SmsTemplete />} />
+                <Route path='otp' element={<OtpList />} />
                 
               </Route>
             </Route>

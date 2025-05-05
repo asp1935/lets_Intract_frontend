@@ -195,6 +195,7 @@ const Sidebar = ({ onMenuClick }) => {
           <motion.ul className="ml-4 mt-1 bg-[#fdfcfd] shadow-md rounded-lg" initial="hidden" animate={isConfigurationOpen ? "visible" : "hidden"} variants={dropdownVariants}>
             <NavLink to='/configuration/sms-configuration'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >SMS API Configuration</li></NavLink>
             <NavLink to='/configuration/sms-templete'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >SMS Templete</li></NavLink>
+            <NavLink to='/configuration/otp'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" >OTP</li></NavLink>
           </motion.ul>
         </li>)}
 

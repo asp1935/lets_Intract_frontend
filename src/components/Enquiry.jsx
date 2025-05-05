@@ -9,7 +9,7 @@ const Enquiry = () => {
   const [enquiry, setEnquiry] = useState([]);
   const updateEnquiry = useUpdateEnquiry();
   const deleteEnquiry = useDeleteEnquiry()
-
+  const [enquiryId, setEnquiryId] = useState(null);
   const dispatch = useDispatch()
   const { data } = useEnquiry();
 
@@ -22,6 +22,7 @@ const Enquiry = () => {
 
   // Function to handle the "Done" action
   const handleDone = (id) => {
+    setEnquiryId(id);
     updateEnquiry.mutate({ enquiryId: id, status: 'approved' }, {
       onSuccess: () => {
         dispatch(showToast({ message: "Status Updated" }))
@@ -29,9 +30,11 @@ const Enquiry = () => {
       onError: (error) => dispatch(showToast({ message: error, type: 'error' })),
 
     })
+    setEnquiryId(null);
 
   };
   const handleDelete = (id) => {
+    setEnquiryId(id);
     deleteEnquiry.mutate(id, {
       onSuccess: () => {
         dispatch(showToast({ message: "Enquiry Deleted Successfully" }))
@@ -39,7 +42,7 @@ const Enquiry = () => {
       onError: (error) => dispatch(showToast({ message: error, type: 'error' })),
 
     })
-
+    setEnquiryId(null);
   };
 
   return (
@@ -76,7 +79,7 @@ const Enquiry = () => {
             >
               <th style={{ padding: '16px', textAlign: 'center' }}>Name</th>
               <th style={{ padding: '16px', textAlign: 'center' }}>Mobile Number</th>
-              <th style={{ padding: '16px', textAlign: 'center' }}>Email</th>
+              {/* <th style={{ padding: '16px', textAlign: 'center' }}>Email</th> */}
               <th style={{ padding: '16px', textAlign: 'center' }}>Address</th>
               <th style={{ padding: '16px', textAlign: 'center' }}>Status</th>
               <th style={{ padding: '16px', textAlign: 'center' }}>Action</th>
@@ -104,10 +107,10 @@ const Enquiry = () => {
                 >
                   <td style={{ padding: '16px', color: '#333', textAlign: 'center' }}>{member.name}</td>
                   <td style={{ padding: '16px', color: '#555', textAlign: 'center' }}>{member.mobile}</td>
-                  <td style={{ padding: '16px', color: '#555', textAlign: 'center' }}>{member.email}</td>
+                  {/* <td style={{ padding: '16px', color: '#555', textAlign: 'center' }}>{member.email}</td> */}
                   <td style={{ padding: '16px', color: '#555', textAlign: 'center' }}>{member.taluka}</td>
                   <td style={{ padding: '16px', color: '#555', textAlign: 'center' }}>{member.status}</td>
-                  <td style={{ padding: '16px' }}>
+                  <td style={{ padding: '16px' }} className='flex items-center justify-center'>
                     {member.status !== 'approved' && (
                       <button
                         onClick={() => handleDone(member._id)}
@@ -125,9 +128,9 @@ const Enquiry = () => {
                             backgroundColor: '#5a4dbf',
                           },
                         }}
-                        disabled={updateEnquiry.isPending}
+                        disabled={enquiryId === member._id}
                       >
-                        {updateEnquiry.isPending ? "Updating..." : "Done"}
+                        {enquiryId === member._id ? "Updating..." : "Done"}
                       </button>
                     )}
                     {member.status === 'approved' && (
@@ -147,9 +150,9 @@ const Enquiry = () => {
                             backgroundColor: '#5a4dbf',
                           },
                         }}
-                        disabled={deleteEnquiry.isPending}
+                        disabled={enquiryId === member._id}
                       >
-                        {deleteEnquiry.isPending ? "Deleting" : "Delete"}
+                        {enquiryId === member._id ? "Deleting" : "Delete"}
                       </button>
                     )}
                   </td>

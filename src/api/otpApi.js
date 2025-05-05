@@ -10,3 +10,12 @@ export const sendOtp = async (mobile) => {
         throw error.response?.data?.message || 'Failed To Send OTP';
     }
 };
+
+export const getOpts = async () => {
+    try {
+        const response = await axios.get(`${apiUrl}/otp/get-otps`, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        throw error.response?.data?.message || "Faild to Fetch OPTs";
+    }
+}
