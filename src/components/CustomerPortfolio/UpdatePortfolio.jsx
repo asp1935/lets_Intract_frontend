@@ -264,7 +264,7 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                     </div>
                 </div>
 
-                <div className='w-9/12 flex justify-evenly mt-5'>
+                <div className='w-10/12 flex justify-evenly gap-x-3 mt-5 '>
                     <div>
                         <label className='inline-block w-full text-center text-sm text-gray-600 font-semibold'>Mobile</label>
                         {isEditMode ? (
@@ -322,10 +322,10 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                     </div>
                 </div>
 
-                <div className='w-9/12 my-5'>
+                <div className='w-10/12 my-5'>
                     <h5 className='text-center text-gray-500 font-semibold'>Social Media</h5>
                     {isEditMode ? (
-                        <div className='mt-2 flex  gap-1'>
+                        <div className='mt-2 flex  gap-3'>
                             <div>
                                 <label className="text-[#640D5F] font-bold">Whatsapp :</label>
                                 <input type="url" name="whatsapp" placeholder="Whtasapp URL" value={formData?.socialLinks?.whatsapp} onChange={handleInputChange} className="w-full rounded p-2 border  border-[#640D5F]" />
