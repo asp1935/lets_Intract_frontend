@@ -5,7 +5,7 @@ import { useAdmin } from "../hooks/useAdmin";
 import { useAssociate } from "../hooks/useAssociate";
 import { useAddUser, useUser } from "../hooks/useUser";
 import { showToast } from "../redux/slice/ToastSlice";
-import { useDistrict, useTaluka } from "../hooks/useAddress";
+import { useDistrict, useStateData, useTaluka } from "../hooks/useAddress";
 
 const AddPolitician = () => {
   const [politicianData, setPoliticianData] = useState({
@@ -28,6 +28,7 @@ const AddPolitician = () => {
   const [selectedReferral, setSelectedRefferal] = useState(null);
   const [filteredStaff, setFilteredStaff] = useState([]);
   const [filteredAssociate, setFilteredAssociate] = useState([]);
+  const [states, setStates] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [talukas, setTalukas] = useState([]);
 
@@ -40,19 +41,32 @@ const AddPolitician = () => {
   const { data: associateData } = useAssociate(); // Fetch associates 
 
 
-  const states = ["Maharastra"];
-  const { data: districtData } = useDistrict();
-  const { data: talukaData } = useTaluka(districts?.find(dist => dist?.districtnameenglish === politicianData?.district)?.districtcode)
+  const { data: stateData } = useStateData();
+  const { data: districtData } = useDistrict(Array.isArray(states)
+    ? states.find(state => state?.statenameenglish === politicianData?.state)?.statecode
+    : undefined);
+  // const { data: talukaData } = useTaluka(districts?.find(dist => dist?.districtnameenglish === politicianData?.district)?.districtcode)
+  const { data: talukaData } = useTaluka(
+    Array.isArray(districts)
+      ? districts.find(dist => dist?.districtnameenglish === politicianData?.district)?.districtcode
+      : undefined
+  );
 
   useEffect(() => {
-    if (districtData?.length > 0) {
-      setDistricts(districtData);
+    if (stateData?.data?.length > 0) {
+      setStates(stateData.data);
+    }
+  }, [stateData])
+
+  useEffect(() => {
+    if (districtData?.data?.length > 0) {
+      setDistricts(districtData.data);
     }
   }, [districtData])
 
   useEffect(() => {
-    if (talukaData?.length > 0) {
-      setTalukas(talukaData);
+    if (talukaData?.data?.length > 0) {
+      setTalukas(talukaData.data);
     }
   }, [talukaData])
 
@@ -279,17 +293,31 @@ const AddPolitician = () => {
           <div className="flex space-x-2">
             <select name="state" value={politicianData.state} onChange={handleChange} className="w-1/3 rounded p-2 border border-[#640D5F]">
               <option value="">State</option>
-              {states.map((state) => (<option key={state} value={state}>{state}</option>))}
+              {Array.isArray(states) && states.map((state) => (
+                <option key={state.statecode} value={state.statenameenglish}>
+                  {state.statenameenglish}
+                </option>
+              ))}
             </select>
             {errors.state && <p className="text-red-400 text-sm">{errors.state}</p>}
             <select name="district" value={politicianData.district} onChange={handleChange} className="w-1/3 rounded p-2 border border-[#640D5F]" disabled={!politicianData.state}>
               <option value="">District</option>
-              {politicianData.state && districts?.map((district) => (<option key={district.districtcode} value={district.districtnameenglish}>{district.districtnameenglish}</option>))}
+              {/* {politicianData.state && districts?.map((district) => (<option key={district.districtcode} value={district.districtnameenglish}>{district.districtnameenglish}</option>))} */}
+              {politicianData.state && Array.isArray(districts) && districts.map((district) => (
+                <option key={district.districtcode} value={district.districtnameenglish}>
+                  {district.districtnameenglish}
+                </option>
+              ))}
             </select>
             {errors.district && <p className="text-red-400 text-sm">{errors.district}</p>}
             <select name="taluka" value={politicianData.taluka} onChange={handleChange} className="w-1/3 p-2 rounded border border-[#640D5F]" disabled={!politicianData.district}>
               <option value="">Taluka</option>
-              {politicianData.district && talukas?.map((taluka) => (<option key={taluka.subdistrictcode} value={taluka.subdistrictnameenglish}>{taluka.subdistrictnameenglish}</option>))}
+              {/* {politicianData.district && talukas?.map((taluka) => (<option key={taluka.subdistrictcode} value={taluka.subdistrictnameenglish}>{taluka.subdistrictnameenglish}</option>))} */}
+              {politicianData.district && Array.isArray(talukas) && talukas.map((taluka) => (
+                <option key={taluka.subdistrictcode} value={taluka.subdistrictnameenglish}>
+                  {taluka.subdistrictnameenglish}
+                </option>
+              ))}
             </select>
             {errors.taluka && <p className="text-red-400 text-sm">{errors.taluka}</p>}
           </div>

@@ -1,10 +1,20 @@
 import { useQuery } from "@tanstack/react-query"
-import { getDistricts, getTaluksByDistrict } from "../api/addressApi"
+import { getDistricts, getStates, getTaluksByDistrict } from "../api/addressApi"
 
-export const useDistrict = () => {
+export const useStateData = () => {
     return useQuery({
-        queryKey: ['district'],
-        queryFn: getDistricts,
+        queryKey: ['state'],
+        queryFn: getStates,
+        staleTime: 5 * 60 * 1000,
+        retry: false,
+        useErrorBoundary: false,
+    })
+};
+
+export const useDistrict = (stateCode) => {
+    return useQuery({
+        queryKey: ['district',stateCode],
+        queryFn: ()=>getDistricts(stateCode),
         staleTime: 5 * 60 * 1000,
         retry: false,
         useErrorBoundary: false,
