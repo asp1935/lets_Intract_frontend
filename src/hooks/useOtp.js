@@ -14,8 +14,8 @@ export const useOtp = () => {
 export const useSendOtp = () => {
     return useMutation({
         mutationFn: (mobile) => sendOtp(mobile),
-        onSuccess: (data) => {
-            console.log('OTP Sent', data?.data?.otp);
+        onSuccess: () => {
+            console.log('OTP Sent');
         },
     });
 };

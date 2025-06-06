@@ -38,7 +38,6 @@ function AddClients({ setAddClients, uid, pid, onClientAdded }) {
     const removeService = (index) => {
         const updatedClients = clients.filter((_, i) => i !== index);
         setClients(updatedClients);
-        console.log(updatedClients);
 
     };
     const validate = () => {

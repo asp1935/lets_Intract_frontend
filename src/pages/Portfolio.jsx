@@ -37,7 +37,7 @@ function Portfolio() {
                 if (err.response?.status === 404) {
                     setNotFound(true)
                 } else {
-                    console.log('Failed To Find Portfolio', err)
+                    console.log('Failed To Find Portfolio');
                 }
             }
         }

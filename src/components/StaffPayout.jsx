@@ -22,7 +22,6 @@ const StaffPayout = () => {
 
   // useEffect(() => {
   //   if (staffData?.data.length > 0) {
-  //     console.log(staffData);
 
   //     setUsers(staffData.data)
   //   }

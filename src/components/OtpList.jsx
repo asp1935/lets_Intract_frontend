@@ -10,11 +10,8 @@ function OtpList() {
     useEffect(() => {
         if (data?.data.length > 0) {
             setOtpData(data.data)
-            console.log(data.data);
-
         }
     }, [data])
-    console.log(otpData);
 
     return (
         <div
