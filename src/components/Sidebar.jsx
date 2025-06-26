@@ -104,8 +104,8 @@ const Sidebar = ({ onMenuClick }) => {
             {isPortfolioOpen ? <ChevronDown /> : <ChevronRight />}
           </button>
           <motion.ul className="ml-4 mt-1 bg-[#fdfcfd] shadow-md rounded-lg" initial="hidden" animate={isPortfolioOpen ? "visible" : "hidden"} variants={dropdownVariants}>
-            <NavLink to='/portfolio/add'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" > New Portfolio</li></NavLink>
-            <NavLink to='/portfolio/manage'> <li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" > Manage Portfolios</li></NavLink>
+            <NavLink to='/user-portfolio/add'><li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" > New Portfolio</li></NavLink>
+            <NavLink to='/user-portfolio/manage'> <li className="p-2 cursor-pointer hover:bg-[#ebace8] rounded-md" > Manage Portfolios</li></NavLink>
           </motion.ul>
         </li>)}
 

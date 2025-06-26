@@ -136,7 +136,7 @@ const App = () => {
 
             {/* customer-portfolio Route  */}
             <Route element={<ProtededRoute allowedPermission="portfolio" />}>
-              <Route path="/portfolio">
+              <Route path="/user-portfolio">
                 <Route path="add" element={<AddPortfolio />} />
                 <Route path="manage" element={<ManagePortfolio />} />
               </Route>
