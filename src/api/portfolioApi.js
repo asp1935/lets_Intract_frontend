@@ -127,3 +127,13 @@ export const deletePortfolio = async (pid) => {
     }
 };
 
+export const updateIncludeLink = async (pid, includeLink) => {
+    try {
+        
+        const response = await axios.patch(`${apiUrl}/portfolio/update-include-link/${pid}`, { includeLink }, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+
+        throw error.response.data.message || "Failed To Update Status";
+    }
+}

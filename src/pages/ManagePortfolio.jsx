@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useDeletePortfolio, usePortfolio } from '../hooks/usePortfolio';
+import { useDeletePortfolio, usePortfolio, useUpdateIncludeLink } from '../hooks/usePortfolio';
 import UpdatePortfolio from '../components/CustomerPortfolio/UpdatePortfolio';
 import { useDispatch } from 'react-redux';
 import { showToast } from '../redux/slice/ToastSlice';
@@ -17,6 +17,7 @@ function ManagePortfolio() {
   const dispatch = useDispatch();
   const { data: portfolioData } = usePortfolio();
   const deletePortfolio = useDeletePortfolio();
+  const updateIncludeLink = useUpdateIncludeLink();
 
 
   useEffect(() => {
@@ -60,6 +61,14 @@ function ManagePortfolio() {
 
     })
   }
+  const handleToggleIncludeLink = (id, status) => {
+    updateIncludeLink.mutate({ pid: id, status: !status }, {
+      onSuccess: () => {
+        dispatch(showToast({ message: "Status Updated" }))
+      },
+      onError: (error) => dispatch(showToast({ message: error, type: 'error' }))
+    })
+  };
   const handleViewClick = (userName) => {
     window.open(`/portfolio/${userName}`, '_blank')
   }
@@ -87,6 +96,8 @@ function ManagePortfolio() {
                 <th className="border  py-2">Customers</th>
                 <th className="border  py-2">Organization</th>
                 <th className="border  py-2">Actions</th>
+                <th className="border  py-2">Activate</th>
+
               </tr>
             </thead>
             <tbody>
@@ -114,7 +125,18 @@ function ManagePortfolio() {
                         onClick={() => { handleViewClick(portfolioUser.userName) }}>
                         View <ExternalLink className='inline-block' />
                       </button>
+
                     </div>
+                  </td>
+                  <td className="p-3 border border-[#640D5F] text-center">
+                    <label className="switch">
+                      <input
+                        type="checkbox"
+                        checked={portfolioUser.includeLink}
+                        onChange={() => handleToggleIncludeLink(portfolioUser._id, portfolioUser.includeLink)}
+                      />
+                      <span className="slider round"></span>
+                    </label>
                   </td>
                 </tr>
               ))}

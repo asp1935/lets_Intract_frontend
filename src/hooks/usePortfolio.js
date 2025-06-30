@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addClients, addGallery, addServices, createPortfolio, deletePortfolio, deletePortfolioItem, getPortfolio, updatePortfolio, updateProfilePhoto } from "../api/portfolioApi";
+import { addClients, addGallery, addServices, createPortfolio, deletePortfolio, deletePortfolioItem, getPortfolio, updateIncludeLink, updatePortfolio, updateProfilePhoto } from "../api/portfolioApi";
 
 
 // Fetch Plans
@@ -88,6 +88,16 @@ export const useDeletePortfolio = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (pid) => deletePortfolio(pid),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['portfolio'])
+        }
+    })
+}
+
+export const useUpdateIncludeLink = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ pid, status }) => updateIncludeLink(pid, status),
         onSuccess: () => {
             queryClient.invalidateQueries(['portfolio'])
         }
