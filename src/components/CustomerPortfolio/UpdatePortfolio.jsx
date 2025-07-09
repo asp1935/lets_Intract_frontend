@@ -6,7 +6,8 @@ import Services from './Services';
 import { Briefcase, Images, UserPen, Users } from 'lucide-react';
 import Clients from './Clients';
 import Gallery from './Gallery';
-import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaWhatsapp ,FaQrcode} from 'react-icons/fa';
+import Payment from './Payment';
 
 function UpdatePortfolio({ portfolioData, setPortfolioData }) {
 
@@ -294,7 +295,7 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                                     onChange={handleInputChange}
                                     className="border px-2 py-1 rounded"
                                 />
-                                {errors.email && <p className="text-red-400 text-sm">{errors.email}asdsdsdd</p>}
+                                {errors.email && <p className="text-red-400 text-sm">{errors.email}</p>}
 
                             </>
                         ) : (
@@ -420,13 +421,17 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                     <button className='bg-rose-600 hover:bg-rose-700  px-3 py-1 rounded' onClick={() => toggleSection('services')} >Services <Briefcase className='inline-block' /> </button>
                     <button className='bg-rose-600 hover:bg-rose-700  px-3 py-1 rounded' onClick={() => toggleSection('clients')} >Clients <Users className='inline-block' /></button>
                     <button className='bg-rose-600 hover:bg-rose-700  px-3 py-1 rounded' onClick={() => toggleSection('gallery')} >Gallery <Images className='inline-block' /></button>
+                    <button className='bg-rose-600 hover:bg-rose-700  px-3 py-1 rounded' onClick={() => toggleSection('payment')} >Payment <FaQrcode  className='inline-block' /></button>
+
                 </div>
             </div>
             <div>
                 {activeSection === 'services' && <Services servicesData={portfolio?.services} pid={portfolio?._id} />}
                 {activeSection === 'clients' && <Clients clientsData={portfolio?.clients} uid={portfolio?.userId} pid={portfolio?._id} />}
                 {activeSection === 'gallery' && <Gallery galleryData={portfolio?.gallery} uid={portfolio?.userId} pid={portfolio?._id} />}
-
+                {activeSection === 'payment' && <Payment paymentData={portfolio?.paymentDetails} uid={portfolio?.userId} pid={portfolio?._id} />}
+                
+                
             </div>
             {/* Delete Confirmation Modal */}
             {

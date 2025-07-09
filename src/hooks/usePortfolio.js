@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addClients, addGallery, addServices, createPortfolio, deletePortfolio, deletePortfolioItem, getPortfolio, updateIncludeLink, updatePortfolio, updateProfilePhoto } from "../api/portfolioApi";
+import { addClients, addGallery, addServices, createPortfolio, deletePaymetDetails, deletePortfolio, deletePortfolioItem, getPortfolio, updateIncludeLink, updatePortfolio, updateProfilePhoto, upsertPaymentDetails } from "../api/portfolioApi";
 
 
 // Fetch Plans
@@ -99,6 +99,26 @@ export const useUpdateIncludeLink = () => {
     return useMutation({
         mutationFn: ({ pid, status }) => updateIncludeLink(pid, status),
         onSuccess: () => {
+            queryClient.invalidateQueries(['portfolio'])
+        }
+    })
+}
+
+export const useUpsertPaymentDetails = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ portfolioId, userId, paymentData }) => upsertPaymentDetails(portfolioId, userId, paymentData),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['portfolio'])
+        }
+    })
+}
+
+export const useDeletePaymentDetails=()=>{
+    const queryClient=useQueryClient();
+    return useMutation({
+        mutationFn:({portfolioId})=>deletePaymetDetails(portfolioId),
+        onSuccess:()=>{
             queryClient.invalidateQueries(['portfolio'])
         }
     })

@@ -43,8 +43,8 @@ export const createPortfolio = async (userData) => {
 
 export const updatePortfolio = async (portfolioId, updatedData) => {
     try {
-        const { userName, name, ownerName, about, email, mobile, address, theme ,socialLinks} = updatedData;
-        const responce = await axios.patch(`${apiUrl}/portfolio/update-portfolio/${portfolioId}`, { userName, name, ownerName, about, email, mobile, address, theme,socialLinks }, { withCredentials: true });
+        const { userName, name, ownerName, about, email, mobile, address, theme, socialLinks } = updatedData;
+        const responce = await axios.patch(`${apiUrl}/portfolio/update-portfolio/${portfolioId}`, { userName, name, ownerName, about, email, mobile, address, theme, socialLinks }, { withCredentials: true });
         return responce.data;
     } catch (error) {
         throw error.response?.data?.message || 'Failed to Update Portfolio';
@@ -129,7 +129,7 @@ export const deletePortfolio = async (pid) => {
 
 export const updateIncludeLink = async (pid, includeLink) => {
     try {
-        
+
         const response = await axios.patch(`${apiUrl}/portfolio/update-include-link/${pid}`, { includeLink }, { withCredentials: true });
         return response.data;
     } catch (error) {
@@ -137,3 +137,38 @@ export const updateIncludeLink = async (pid, includeLink) => {
         throw error.response.data.message || "Failed To Update Status";
     }
 }
+
+export const upsertPaymentDetails = async (portfolioId, userId, paymentData) => {
+    try {
+        const formData = new FormData();
+        formData.append('userId', userId);
+        if (paymentData.qrFile) {
+            formData.append('qrFile', paymentData.qrFile);
+        }
+
+        formData.append('bankName', paymentData.bankName);
+        formData.append('accountHolderName', paymentData.accountHolderName);
+        formData.append('accountNo', paymentData.accountNo);
+        formData.append('ifscNo', paymentData.ifscNo);
+        formData.append('gstinNo', paymentData.gstinNo);
+
+
+        const response = await axios.patch(`${apiUrl}/portfolio/add-payment/${portfolioId}`, formData, { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } })
+        return response.data
+    } catch (error) {
+        throw error.response?.data?.message || "Failed to Upsert Payment Details"
+    }
+};
+
+export const deletePaymetDetails = async (portdolioId) => {
+    try {
+        const response = await axios.delete (`${apiUrl}/portfolio/delete-details/${portdolioId}`, { withCredentials: true });
+        return response;
+    } catch (error) {
+        throw error.response?.data?.message || "Failed to Delete Payment Details"
+
+    }
+
+} 
+
+

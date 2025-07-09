@@ -53,33 +53,95 @@ const Home = () => {
     }
   }, [customerData]);
 
+  // useEffect(() => {
+
+  //   const businessCount = users.filter(user => user.type === 'business' && user.role==='user').length;
+
+  //   const politicalCount = users.filter(user => user.type === 'political' && user.role==='user').length;
+  //   const basicPlanUserCnt = users.filter(user => user?.userPlans?.planDetails?.type === 'basic').length;
+  //   const advancePlanUserCnt = users.filter(user => user?.userPlans?.planDetails?.type === 'advance').length;
+  //   const basicPlanBUserCnt = users.filter(user => user.type === 'business' && user?.userPlans?.planDetails?.type === 'basic').length;
+  //   const advancePlanBUserCnt = users.filter(user => user.type === 'business' && user?.userPlans?.planDetails?.type === 'advance').length;
+  //   const basicPlanPUserCnt = users.filter(user => user.type === 'political' && user?.userPlans?.planDetails?.type === 'basic').length;
+  //   const advancePlanPUserCnt = users.filter(user => user.type === 'political' && user?.userPlans?.planDetails?.type === 'advance').length;
+
+
+
+  //   setCounts(prev => ({
+  //     ...prev,
+  //     totalUser: users.filter(user=>user.role==='user').length,
+  //     businessCount: businessCount,
+  //     politicalCount: politicalCount,
+  //     basicPlanUserCnt: basicPlanUserCnt,
+  //     advancePlanUserCnt: advancePlanUserCnt,
+  //     basicPlanBUserCnt: basicPlanBUserCnt,
+  //     advancePlanBUserCnt: advancePlanBUserCnt,
+  //     basicPlanPUserCnt: basicPlanPUserCnt,
+  //     advancePlanPUserCnt: advancePlanPUserCnt,
+  //   }))
+  // }, [users])
   useEffect(() => {
+    let totalUser = 0;
+    let businessCount = 0;
+    let politicalCount = 0;
 
-    const businessCount = users.filter(user => user.type === 'business').length;
+    let basicPlanUserCnt = 0;
+    let advancePlanUserCnt = 0;
 
-    const politicalCount = users.filter(user => user.type === 'political').length;
-    const basicPlanUserCnt = users.filter(user => user?.userPlans?.planDetails?.type === 'basic').length;
-    const advancePlanUserCnt = users.filter(user => user?.userPlans?.planDetails?.type === 'advance').length;
-    const basicPlanBUserCnt = users.filter(user => user.type === 'business' && user?.userPlans?.planDetails?.type === 'basic').length;
-    const advancePlanBUserCnt = users.filter(user => user.type === 'business' && user?.userPlans?.planDetails?.type === 'advance').length;
-    const basicPlanPUserCnt = users.filter(user => user.type === 'political' && user?.userPlans?.planDetails?.type === 'basic').length;
-    const advancePlanPUserCnt = users.filter(user => user.type === 'political' && user?.userPlans?.planDetails?.type === 'advance').length;
+    let basicPlanBUserCnt = 0;
+    let advancePlanBUserCnt = 0;
 
+    let basicPlanPUserCnt = 0;
+    let advancePlanPUserCnt = 0;
 
+    users.forEach(user => {
+      const isUser = user.role === 'user';
+      const type = user.type;
+      const planType = user?.userPlans?.planDetails?.type;
+
+      if (isUser) {
+        totalUser++;
+
+        if (type === 'business') {
+          businessCount++;
+        } else if (type === 'political') {
+          politicalCount++;
+        }
+      }
+
+      if (planType === 'basic') {
+        basicPlanUserCnt++;
+
+        if (type === 'business') {
+          basicPlanBUserCnt++;
+        } else if (type === 'political') {
+          basicPlanPUserCnt++;
+        }
+      } else if (planType === 'advance') {
+        advancePlanUserCnt++;
+
+        if (type === 'business') {
+          advancePlanBUserCnt++;
+        } else if (type === 'political') {
+          advancePlanPUserCnt++;
+        }
+      }
+    });
 
     setCounts(prev => ({
       ...prev,
-      totalUser: users.length,
-      businessCount: businessCount,
-      politicalCount: politicalCount,
-      basicPlanUserCnt: basicPlanUserCnt,
-      advancePlanUserCnt: advancePlanUserCnt,
-      basicPlanBUserCnt: basicPlanBUserCnt,
-      advancePlanBUserCnt: advancePlanBUserCnt,
-      basicPlanPUserCnt: basicPlanPUserCnt,
-      advancePlanPUserCnt: advancePlanPUserCnt,
-    }))
-  }, [users])
+      totalUser,
+      businessCount,
+      politicalCount,
+      basicPlanUserCnt,
+      advancePlanUserCnt,
+      basicPlanBUserCnt,
+      advancePlanBUserCnt,
+      basicPlanPUserCnt,
+      advancePlanPUserCnt,
+    }));
+  }, [users]);
+
 
   useEffect(() => {
     if (planData?.data.length > 0) {
@@ -318,7 +380,7 @@ const Home = () => {
                   <p className="text-4xl font-bold text-yellow-500 text-center" style={{ textShadow: "3px 3px 10px rgba(80, 20, 56, 1)" }}>{staffRefCnt?.totalReferrals || 0}</p>
                 </div>
               </div>
-              
+
             </div>
           </div>
 
