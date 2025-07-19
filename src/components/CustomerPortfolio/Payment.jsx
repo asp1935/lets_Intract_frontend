@@ -183,12 +183,16 @@ function Payment({ paymentData, uid, pid }) {
 
                 </div>
                 <div className='flex flex-col items-center  w-1/2'>
-                    {payment.qrcodeImage && (
+                    {payment.qrcodeImage ? (
                         <>
                             <p className='font-semibold mb-2 text-xl'>QR Code</p>
                             <div className='border w-60 h-60 '>
                                 <img src={`${url}${payment.qrcodeImage}`} alt="" className='w-full h-full' />
                             </div>
+                        </>
+                    ):(
+                        <>
+                         <p className='font-semibold mb-2 text-xl'>QR Code Unavailable</p>
                         </>
                     )}
                     {isEditing && (

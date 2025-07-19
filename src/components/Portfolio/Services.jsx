@@ -1,60 +1,103 @@
-import React from 'react';
+import React from "react";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 40, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.6,
+      ease: [0.4, 0, 0.2, 1],
+    },
+  },
+};
 
 const Services = ({ services }) => {
   return (
-    <section className="py-5 bg-gray-100 w-full" id="services">
-      <div className="container mx-auto">
-        <div className="text-center mb-5 animate-fade-in">
-          <h2 className="font-bold text-3xl mb-3 text-color">Our Services</h2>
-          <p className="text-lg text-gray-600">We offer comprehensive solutions to grow your business</p>
-          <div className="divider mx-auto my-1 icon-bg" style={{ width: '80px', height: '8px' }}></div>
-        </div>
+    <section
+      className="py-16 bg-gray-900"
+      id="services"
+      style={{ fontFamily: "'Poppins', sans-serif" }}
+    >
+      <div className="container mx-auto px-6 max-w-7xl">
+        {/* Header */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0, y: -30 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+          }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-5xl font-extrabold mb-4 text-color-s leading-tight tracking-tight">
+            Our Services
+          </h2>
+          <p className="max-w-3xl mx-auto text-lg text-gray-300 font-medium">
+            We offer comprehensive solutions to grow your business and help you achieve your goals.
+          </p>
+          <div
+            className="mx-auto mt-6 rounded-full"
+            style={{
+              width: "90px",
+              height: "9px",
+              background: "linear-gradient(135deg, var(--primary-color), #1a3a8f)",
+              filter: "drop-shadow(0 0 8px var(--primary-color))",
+            }}
+          />
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-2">
+        {/* Cards (center aligned row always) */}
+        <motion.div
+          className="flex flex-wrap justify-center gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {services.map((service, index) => (
-            <div 
-              key={index} 
-              className="animate-card" 
-              style={{ animationDelay: `${index * 0.1}s` }}
+            <motion.div
+              key={index}
+              variants={cardVariants}
+              className="w-full sm:w-[300px] bg-gray-800 rounded-2xl p-8 shadow-xl border border-blue-700 cursor-pointer
+              hover:shadow-2xl hover:-translate-y-4 transition-transform duration-500 ease-in-out"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <div className="card h-full shadow-sm mx-1 border border-blue-600 hover-effect">
-                <div className="card-body text-center p-4 flex flex-col">
-                  <h3 className="text-lg font-bold text-color">{service.title}</h3>
-                  <p className="text-gray-600 flex-grow">{service.description}</p>
-                </div>
-              </div>
-            </div>
+              <h3 className="text-2xl font-semibold mb-4 text-color-s text-center">
+                {service.title}
+              </h3>
+              <p className="text-gray-300 font-medium leading-relaxed text-center">
+                {service.description}
+              </p>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
-      <style jsx>{`
-        .animate-fade-in {
-          animation: fadeIn 0.8s ease-out;
+      <style >{`
+        .text-color {
+          background: linear-gradient(135deg, var(--primary-color), #1a3a8f);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
         }
-        
-        .animate-card {
-          animation: slideUp 0.5s ease-out forwards;
-          opacity: 0;
-        }
-        
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .hover-effect {
-          transition: all 0.3s ease;
-          border-radius: 10px;
-        }
-        .hover-effect:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+
+        .text-color-s {
+          background: linear-gradient(135deg, var(--primary-color), #f8f9fd);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
         }
       `}</style>
     </section>

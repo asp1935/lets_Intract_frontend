@@ -24,12 +24,14 @@ export const createPortfolio = async (userData) => {
 
         formData.append('userId', userData.userId);
         formData.append('name', userData.name);
+        formData.append('companyUrl', userData.companyUrl);
         formData.append('ownerName', userData.ownerName);
         formData.append('about', userData.about);
         formData.append('email', userData.email);
         formData.append('mobile', userData.mobile);
         formData.append('socialLinks', JSON.stringify(userData.socialLinks));
         formData.append('address', userData.address);
+        formData.append('addressUrl', userData.addressUrl);
         formData.append('theme', userData.theme);
         formData.append('profilePhoto', userData.profilePhoto);
 
@@ -43,8 +45,8 @@ export const createPortfolio = async (userData) => {
 
 export const updatePortfolio = async (portfolioId, updatedData) => {
     try {
-        const { userName, name, ownerName, about, email, mobile, address, theme, socialLinks } = updatedData;
-        const responce = await axios.patch(`${apiUrl}/portfolio/update-portfolio/${portfolioId}`, { userName, name, ownerName, about, email, mobile, address, theme, socialLinks }, { withCredentials: true });
+        const { userName, name, ownerName, about, email, mobile, address, theme, socialLinks,addressUrl,companyUrl} = updatedData;
+        const responce = await axios.patch(`${apiUrl}/portfolio/update-portfolio/${portfolioId}`, { userName, name, ownerName, about, email, mobile, address, theme, socialLinks,addressUrl ,companyUrl}, { withCredentials: true });
         return responce.data;
     } catch (error) {
         throw error.response?.data?.message || 'Failed to Update Portfolio';
@@ -162,13 +164,13 @@ export const upsertPaymentDetails = async (portfolioId, userId, paymentData) => 
 
 export const deletePaymetDetails = async (portdolioId) => {
     try {
-        const response = await axios.delete (`${apiUrl}/portfolio/delete-details/${portdolioId}`, { withCredentials: true });
+        const response = await axios.delete(`${apiUrl}/portfolio/delete-details/${portdolioId}`, { withCredentials: true });
         return response;
     } catch (error) {
         throw error.response?.data?.message || "Failed to Delete Payment Details"
 
     }
 
-} 
+}
 
 

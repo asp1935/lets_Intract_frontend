@@ -351,7 +351,7 @@ const Home = () => {
               </div>
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-gray-200 font-bold text-sm text-center pb-14">
-                  {`Users: ${counts.totalUser}`}
+                  {`Plans: ${counts.totalPlans}`}
                 </div>
               </div>
             </div>

@@ -80,7 +80,7 @@ function AddGallery({ uid, setAddGallery, pid, onGalleryAdded }) {
     return (
         <div className='w-full my-5  bg-white shadow-xl rounded-xl border overflow-clip'>
             <div className='flex justify-between p-2 bg-[#fb52c3] '>
-                <h3 className='mx-3 text-xl font-semibold'>Add Clients</h3>
+                <h3 className='mx-3 text-xl font-semibold'>Add Gallery Images</h3>
                 <button className='cursor-pointer outline-0' onClick={() => setAddGallery(false)}><X /></button>
             </div>
 

@@ -1,9 +1,9 @@
 import React from 'react';
-import { FaWhatsapp, FaFacebook, FaInstagram } from 'react-icons/fa';
+import { FaWhatsapp, FaFacebook, FaInstagram, FaLink } from 'react-icons/fa';
 
 const Hero = ({ businessInfo }) => {
   const scrollToAbout = () => {
-    const aboutSection = document.getElementById('about');
+    const aboutSection = document.getElementById('contact');
     if (aboutSection) {
       aboutSection.scrollIntoView({ behavior: 'smooth' });
     }
@@ -30,16 +30,32 @@ const Hero = ({ businessInfo }) => {
                 className="hero-profile-img"
               />
               <div className="hero-image-overlay"></div>
+              <div className="hero-image-decoration"></div>
+
             </div>
           </div>
 
           {/* Content Column */}
           <div className="hero-text-container">
+            <div className="hero-tag">Professional Services</div>
             <h1 className="hero-title">
               {businessInfo.ownerName}
             </h1>
             <p className="hero-subtitle">
               {businessInfo.name}
+              {businessInfo.companyUrl && (
+
+                <a
+                  href={businessInfo.companyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center ml-2 text-white hover:text-yellow-400 transition-colors"
+                >
+
+                  <FaLink className="ml-1 text-lg" />
+
+                </a>
+              )}
             </p>
             <p className="hero-description">
               Professional business solutions tailored to your needs
@@ -54,19 +70,21 @@ const Hero = ({ businessInfo }) => {
             </div>
             <div className="hero-social-links">
               {[
-                { icon: <FaWhatsapp  className='text-[2.5rem]'/>, name: 'WhatsApp', url: businessInfo?.socialLinks?.whatsapp   }, // Replace 'your-number' with your WhatsApp number
-                { icon: <FaFacebook className='text-[2.5rem]'/>, name: 'Facebook', url: businessInfo?.socialLinks?.facebook }, // Replace with your Facebook page URL
-                { icon: <FaInstagram className='text-[2.5rem]'/>, name: 'Instagram', url: businessInfo?.socialLinks?.instagram  } // Replace with your Instagram profile URL
+                { icon: <FaWhatsapp className='text-[1.5rem]' />, name: 'WhatsApp', url: businessInfo?.socialLinks?.whatsapp },
+                { icon: <FaFacebook className='text-[1.5rem]' />, name: 'Facebook', url: businessInfo?.socialLinks?.facebook },
+                { icon: <FaInstagram className='text-[1.5rem]' />, name: 'Instagram', url: businessInfo?.socialLinks?.instagram }
               ].map((social, index) => (
                 <a
                   key={index}
                   href={social.url}
-                  target="_blank" // Opens the link in a new tab
-                  rel="noopener noreferrer" // Security best practice
-                  className="social-icon ml-2.5"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon"
                   aria-label={social.name}
                 >
-                  {social.icon}
+                  <div className="social-icon-container">
+                    {social.icon}
+                  </div>
                 </a>
               ))}
             </div>
@@ -75,7 +93,7 @@ const Hero = ({ businessInfo }) => {
       </div>
 
       {/* CSS-in-JS for dynamic styling */}
-      <style jsx>{`
+      <style >{`
         .hero-section {
           --primary-bg: linear-gradient(135deg, var(--primary-color) 0%, #1a3a8f 100%);
           --btn-hover-darken: 15%;
@@ -129,16 +147,22 @@ const Hero = ({ businessInfo }) => {
         .hero-image-wrapper {
           display: inline-block;
           position: relative;
+          z-index: 1;
+
         }
         
         .hero-profile-img {
-          width: 200px;
-          height: 200px;
+          width: 220px;
+          height: 220px;
           object-fit: cover;
           border-radius: 50%;
           border: 5px solid rgba(255,255,255,0.3);
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
           transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          position: relative;
+
+          z-index: 2;
+
         }
         
         .hero-image-overlay {
@@ -150,6 +174,28 @@ const Hero = ({ businessInfo }) => {
           border-radius: 50%;
           border: 4px solid rgba(255,255,255,0.1);
           pointer-events: none;
+        }
+                 .hero-image-overlay {
+          position: absolute;
+          top: -10px;
+          left: -10px;
+          width: calc(100% + 20px);
+          height: calc(100% + 20px);
+          border-radius: 50%; /* Matching perfect circle */
+          border: 2px solid rgba(255,255,255,0.2);
+          pointer-events: none;
+          z-index: 1;
+          animation: pulse 6s infinite ease-in-out;
+        }
+           .hero-image-decoration {
+          position: absolute;
+          top: -20px;
+          left: -20px;
+          width: calc(100% + 40px);
+          height: calc(100% + 40px);
+          background: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.03) 100%);
+          border-radius: 50%; /* Matching perfect circle */
+          z-index: 0;
         }
         
         .hero-profile-img:hover {
@@ -169,23 +215,49 @@ const Hero = ({ businessInfo }) => {
             flex: 1 1 auto;
           }
         }
+             .hero-tag {
+          display: inline-block;
+          background: rgba(255,255,255,0.15);
+          backdrop-filter: blur(10px);
+          padding: 0.5rem 1.25rem;
+          border-radius: 50px;
+          font-size: 0.875rem;
+          font-weight: 600;
+          letter-spacing: 1px;
+          margin-bottom: 1rem;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.9);
+        }
         
-        .hero-title {
-          font-size: 2.5rem;
-          font-weight: bold;
-          margin-bottom: 0.5rem;
-          position: relative;
+        // .hero-title {
+        //   font-size: 2.5rem;
+        //   font-weight: bold;
+        //   margin-bottom: 0.5rem;
+        //   position: relative;
+        //   background: linear-gradient(to right, #ffffff, #e6f0ff);
+        //   -webkit-background-clip: text;
+        //   background-clip: text;
+        //   color: transparent;
+        //   text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        // }
+            .hero-title {
+          font-size: 3rem;
+          font-weight: 800;
+          margin-bottom: 0.75rem;
+          line-height: 1.2;
           background: linear-gradient(to right, #ffffff, #e6f0ff);
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
-          text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          text-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .hero-subtitle {
-          font-size: 1.25rem;
+          font-size: 1.5rem;
           color: rgba(255,255,255,0.9);
           margin-bottom: 1rem;
+          font-weight: 400;
+
         }
         
         .hero-description {
@@ -202,6 +274,7 @@ const Hero = ({ businessInfo }) => {
           justify-content: center;
           margin-bottom: 1.5rem;
         }
+
         
         @media (min-width: 992px) {
           .hero-actions {
@@ -263,21 +336,49 @@ const Hero = ({ businessInfo }) => {
           }
         }
         
-        .social-icon {
+        .social-icons {
           color: rgba(255,255,255,0.75);
           font-size: 1.25rem;
           transition: all 0.3s ease;
         }
-        
-        .social-icon:hover {
+                
+        .social-icon-container {
+          width: 45px;
+          height: 45px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(255,255,255,0.1);
+          backdrop-filter: blur(5px);
+          border-radius: 50%;
           color: white;
-          transform: translateY(-2px);
+          font-size: 1.25rem;
+          transition: all 0.4s ease;
+          border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        // .social-icon:hover {
+        //   color: white;
+        //   transform: translateY(-2px);
+        // }
+          .social-icon:hover .social-icon-container {
+          background: rgba(255,255,255,0.2);
+          transform: translateY(-5px) scale(1.1);
+          color: #FFB200;
+          box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+          border-color: rgba(255,255,255,0.3);
         }
         
         /* Animation */
         @keyframes rotate {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
+        }
+             /* Animations */
+        @keyframes pulse {
+          0% { transform: scale(1); opacity: 0.5; }
+          50% { transform: scale(1.05); opacity: 0.8; }
+          100% { transform: scale(1); opacity: 0.5; }
         }
         
         /* Responsive adjustments */

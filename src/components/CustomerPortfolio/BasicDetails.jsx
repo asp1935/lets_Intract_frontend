@@ -8,6 +8,7 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
     const [customerData, setCustomerData] = useState({
         userId: '',
         name: "",
+        companyUrl: "",
         ownerName: "",
         email: "",
         mobile: "",
@@ -18,6 +19,7 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
         },
         about: "",
         address: "",
+        addressUrl: "",
         theme: "#3498db",
         profilePhoto: null
     });
@@ -33,6 +35,7 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
             setCustomerData({
                 userId: customer._id,
                 name: "",
+                companyUrl: "",
                 ownerName: customer.name,
                 email: customer.email,
                 mobile: customer.mobile,
@@ -43,6 +46,7 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
                 },
                 about: "",
                 address: "",
+                addressUrl: "",
                 theme: "#3498db",
                 profilePhoto: null
             })
@@ -130,6 +134,7 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
                     setCustomerData({
                         userId: '',
                         name: "",
+                        companyUrl: "",
                         ownerName: "",
                         email: "",
                         mobile: "",
@@ -140,6 +145,7 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
                         },
                         about: "",
                         address: "",
+                        addressUrl: "",
                         theme: "#3498db",
                         profilePhoto: null
                     });
@@ -161,9 +167,13 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
         <div className='w-9/12 mx-auto mt-5 shadow-2xl p-5 rounded-2xl'>
             <h2 className="text-3xl font-bold mb-6 text-center text-[#640D5F]" style={{ textShadow: "3px 3px 10px rgba(100, 13, 95, 0.7)" }}>Basic Details</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
-                <label className="text-[#640D5F] font-bold">Organization Name :</label>
+                <label className="text-[#640D5F] font-bold">Company Name :</label>
                 <input type="text" name="name" placeholder="Company Name" value={customerData.name} onChange={handleChange} className="w-full rounded p-2 border border-[#640D5F]" />
                 {errors.name && <p className="text-red-400 text-sm">{errors.name}</p>}
+
+                <label className="text-[#640D5F] font-bold">Campany URL :</label>
+                <input type="text" name="companyUrl" placeholder="Company URL (if available)" value={customerData.companyUrl} onChange={handleChange} className="w-full rounded p-2 border border-[#640D5F]" />
+                {/* {errors.name && <p className="text-red-400 text-sm">{errors.name}</p>} */}
 
                 <label className="text-[#640D5F] font-bold">Customer Name :</label>
                 <input type="text" name="ownerName" placeholder="Cutomer Name" value={customerData.ownerName} onChange={handleChange} className="w-full rounded p-2 border border-[#640D5F]" />
@@ -188,6 +198,10 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
 
                 <input type="text" name="address" placeholder="Address" value={customerData.address} onChange={handleChange} className="w-full rounded p-2 border border-[#640D5F]" />
                 {errors.address && <p className="text-red-400 text-sm">{errors.address}</p>}
+
+                <label className="text-[#640D5F] font-bold">Address URL:</label>
+                <input type="text" name="addressUrl" placeholder="Address Map URL" value={customerData.addressUrl} onChange={handleChange} className="w-full rounded p-2 border border-[#640D5F]" />
+                {/* {errors.address && <p className="text-red-400 text-sm">{errors.address}</p>} */}
 
                 <div className='mt-3 flex  gap-1'>
                     <div>

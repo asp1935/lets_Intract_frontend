@@ -3,10 +3,10 @@ import { useDispatch } from 'react-redux';
 import { useUpdatePortfolio, useUpdateProfilePhoto } from '../../hooks/usePortfolio';
 import { showToast } from '../../redux/slice/ToastSlice';
 import Services from './Services';
-import { Briefcase, Images, UserPen, Users } from 'lucide-react';
+import { Briefcase, Images, Link, Link2, Link2Icon, Link2Off, UserPen, Users } from 'lucide-react';
 import Clients from './Clients';
 import Gallery from './Gallery';
-import { FaFacebook, FaInstagram, FaWhatsapp ,FaQrcode} from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaWhatsapp, FaQrcode } from 'react-icons/fa';
 import Payment from './Payment';
 
 function UpdatePortfolio({ portfolioData, setPortfolioData }) {
@@ -42,6 +42,7 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
             setFormData({
                 userName: portfolio.userName,
                 name: portfolio.name,
+                companyUrl: portfolio.companyUrl,
                 ownerName: portfolio.ownerName,
                 email: portfolio.email,
                 mobile: portfolio.mobile,
@@ -52,6 +53,7 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                 },
                 about: portfolio.about,
                 address: portfolio.address,
+                addressUrl: portfolio.addressUrl,
                 theme: portfolio.theme,
             })
         }
@@ -150,8 +152,23 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
 
     const handleCancle = () => {
         setIsEditMode(false);
-        setFormData({})
-
+        setFormData({
+            userName: portfolio.userName,
+            name: portfolio.name,
+            companyUrl: portfolio.companyUrl,
+            ownerName: portfolio.ownerName,
+            email: portfolio.email,
+            mobile: portfolio.mobile,
+            socialLinks: {
+                whatsapp: portfolio?.socialLinks?.whatsapp,
+                instagram: portfolio?.socialLinks?.instagram,
+                facebook: portfolio?.socialLinks?.facebook
+            },
+            about: portfolio.about,
+            address: portfolio.address,
+            addressUrl: portfolio.addressUrl,
+            theme: portfolio.theme,
+        })
     }
 
 
@@ -240,9 +257,28 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                                     {errors.name && <p className="text-red-400 text-sm">{errors.name}</p>}
                                 </>
                             ) : (
-                                <h4 className='text-lg'>{portfolio?.name}</h4>
+                                <>
+                                    <h4 className='text-lg'>{portfolio?.name}</h4> {portfolio?.companyUrl && (<a href={portfolio?.companyUrl} target='_blank' className='text-sm'><Link /> </a>)}
+                                </>
                             )}
                         </div>
+                        {isEditMode && (
+                            <div className='flex gap-3'>
+                                <label className='text-gray-600 font-semibold'>Company Website:</label>
+                                <>
+                                    <input
+                                        type="text"
+                                        name="companyUrl"
+                                        value={formData.companyUrl || ''}
+                                        onChange={handleInputChange}
+                                        className="border px-2 py-1 rounded"
+                                    />
+                                    {/* {errors.name && <p className="text-red-400 text-sm">{errors.name}</p>} */}
+                                </>
+
+
+                            </div>
+                        )}
 
                         <div className='flex gap-3'>
                             <label className='text-gray-600 font-semibold'>Name:</label>
@@ -322,6 +358,24 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                         )}
                     </div>
                 </div>
+                {isEditMode && (
+
+                    <div className='w-10/12 flex justify-evenly gap-x-3 mt-5 '>
+                        <div>
+                            <label className='inline-block w-full text-center text-sm text-gray-600 font-semibold'>Address Map URL</label>
+                            <>
+                                <input
+                                    type="text"
+                                    name="addressUrl"
+                                    value={formData.addressUrl || ''}
+                                    onChange={handleInputChange}
+                                    className="border px-2 py-1 rounded w-full"
+                                />
+                                {/* {errors.mobile && <p className="text-red-400 text-sm">{errors.mobile}</p>} */}
+                            </>
+                        </div>
+                    </div>
+                )}
 
                 <div className='w-10/12 my-5'>
                     <h5 className='text-center text-gray-500 font-semibold'>Social Media</h5>
@@ -421,7 +475,7 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                     <button className='bg-rose-600 hover:bg-rose-700  px-3 py-1 rounded' onClick={() => toggleSection('services')} >Services <Briefcase className='inline-block' /> </button>
                     <button className='bg-rose-600 hover:bg-rose-700  px-3 py-1 rounded' onClick={() => toggleSection('clients')} >Clients <Users className='inline-block' /></button>
                     <button className='bg-rose-600 hover:bg-rose-700  px-3 py-1 rounded' onClick={() => toggleSection('gallery')} >Gallery <Images className='inline-block' /></button>
-                    <button className='bg-rose-600 hover:bg-rose-700  px-3 py-1 rounded' onClick={() => toggleSection('payment')} >Payment <FaQrcode  className='inline-block' /></button>
+                    <button className='bg-rose-600 hover:bg-rose-700  px-3 py-1 rounded' onClick={() => toggleSection('payment')} >Payment <FaQrcode className='inline-block' /></button>
 
                 </div>
             </div>
@@ -430,8 +484,8 @@ function UpdatePortfolio({ portfolioData, setPortfolioData }) {
                 {activeSection === 'clients' && <Clients clientsData={portfolio?.clients} uid={portfolio?.userId} pid={portfolio?._id} />}
                 {activeSection === 'gallery' && <Gallery galleryData={portfolio?.gallery} uid={portfolio?.userId} pid={portfolio?._id} />}
                 {activeSection === 'payment' && <Payment paymentData={portfolio?.paymentDetails} uid={portfolio?.userId} pid={portfolio?._id} />}
-                
-                
+
+
             </div>
             {/* Delete Confirmation Modal */}
             {

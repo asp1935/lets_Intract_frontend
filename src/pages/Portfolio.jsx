@@ -8,6 +8,9 @@ import Services from '../components/Portfolio/Services';
 import Clients from '../components/Portfolio/Clients';
 import Gallery from '../components/Portfolio/Gallery';
 import '../portfolio.css';
+import Footer from '../components/Portfolio/Footer';
+import PaymentDetails from '../components/Portfolio/PaymentDetails';
+import Contact from '../components/Portfolio/Contact';
 function Portfolio() {
     const { userName } = useParams();
     const [portfolio, setPortfolio] = useState(null);
@@ -24,8 +27,9 @@ function Portfolio() {
                 const responce = await axios.get(`${apiUrl}/portfolio/user-portfolio/${userName}`)
                 if (responce?.data) {
                     setPortfolio(responce.data.data);
-
-                    setPrimaryColor(responce.data.data.theme)
+                    
+                    // setPrimaryColor(responce.data.data.theme)
+                    
                     setTimeout(() => {
                         setIsLoading(false)
                     }, 1000)
@@ -47,37 +51,54 @@ function Portfolio() {
     useEffect(() => {
         // Simulate API fetch
         document.documentElement.style.setProperty('--primary-color', primaryColor);
+
     }, [primaryColor]);
 
     if (notFound) return <Navigate to="/404" />;
     if (isloading) return <div className='w-full h-screen  flex justify-center items-center'><img src="/loading.gif" alt="" /></div>;
     const theme = ["#3498db", "#2ecc71", "#e74c3c", "#f39c12", "#9b59b6"]
+    
     return (
-        <div className='w-screen'>
-            <div className="fixed top-0  w-full z-50  bg-white shadow-sm">
-                <ThemeSection
-                    themes={theme}
-                    onThemeChange={(color) => setPrimaryColor(color)}
-                />
+        <>
+            <div className='w-screen'>
+                <div className="fixed top-0  w-full z-50  bg-white shadow-sm">
+                    <ThemeSection
+                        color={portfolio.theme}
+                        themes={theme}
+                        onThemeChange={(color) => setPrimaryColor(color)}
+                    />
+                </div>
+                {/* Main content with padding to account for fixed header */}
+                <div className="pt-11"> {/* Adjust this padding based on your ThemeSection height */}
+                    {/* <Header businessInfo={data.businessInfo} /> */}   
+                    {/* <Profile businessInfo={data.businessInfo}/> */}
+                    <Hero businessInfo={portfolio} />
+                    <About businessInfo={portfolio} />
+                    {portfolio.services.length > 0 && (
+                        <Services services={portfolio.services} />
+                    )}
+                    {portfolio.clients.length > 0 && (
+                        <Clients clients={portfolio.clients} />
+                    )}
+                    {portfolio.gallery.length > 0 && (
+                        <Gallery galleryItems={portfolio.gallery} />
+                    )}
+                    {portfolio.paymentDetails && (
+                        <PaymentDetails payment={portfolio.paymentDetails} />
+                    )}
+
+                    {/* <Contact contactInfo={data.businessInfo.contact} /> */}
+                    <Contact businessInfo={portfolio} />
+
+                </div>
+                <Footer />
             </div>
-            {/* Main content with padding to account for fixed header */}
-            <div className="pt-16"> {/* Adjust this padding based on your ThemeSection height */}
-                {/* <Header businessInfo={data.businessInfo} /> */}
-                {/* <Profile businessInfo={data.businessInfo}/> */}
-                <Hero businessInfo={portfolio} />
-                <About businessInfo={portfolio} />
-                {portfolio.services.length > 0 && (
-                    <Services services={portfolio.services} />
-                )}
-                {portfolio.clients.length > 0 && (
-                    <Clients clients={portfolio.clients} />
-                )}
-                {portfolio.gallery.length > 0 && (
-                    <Gallery galleryItems={portfolio.gallery} />
-                )}
-                {/* <Contact contactInfo={data.businessInfo.contact} /> */}
-            </div>
-        </div>
+            <style >{`
+                .Toastify{
+                    padding:0px !important;
+                }`}
+            </style>
+        </>
     )
 }
 

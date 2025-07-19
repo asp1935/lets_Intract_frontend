@@ -110,10 +110,14 @@ function ManagePortfolio() {
 
                       <button
                         className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 shadow-md transition-transform transform hover:scale-105"
-                        onClick={() => { setUpdatePortfolioData(portfolioUser) }}
+                        onClick={() => {
+                          setUpdatePortfolioData(portfolioUser);
+                          window.scrollTo({ top: 40, behavior: 'smooth' });
+                        }}
                       >
                         Update
                       </button>
+
                       <button
                         className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 shadow-md transition-transform transform hover:scale-105"
                         onClick={() => { confirmDelete(portfolioUser._id) }}
