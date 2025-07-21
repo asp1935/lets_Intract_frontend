@@ -30,15 +30,38 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
 
 
 
+    // useEffect(() => {
+    //     if (customer) {
+    //         setCustomerData({
+    //             userId: customer._id,
+    //             name: "",
+    //             companyUrl: "",
+    //             ownerName: customer.name,
+    //             email: customer.email,
+    //             mobile: customer.mobile,
+    //             socialLinks: {
+    //                 whatsapp: '',
+    //                 instagram: '',
+    //                 facebook: ''
+    //             },
+    //             about: "",
+    //             address: "",
+    //             addressUrl: "",
+    //             theme: "#3498db",
+    //             profilePhoto: null
+    //         })
+    //     }
+    // }, [customer])
+
     useEffect(() => {
         if (customer) {
             setCustomerData({
-                userId: customer._id,
+                userId: customer._id || '',
                 name: "",
                 companyUrl: "",
-                ownerName: customer.name,
-                email: customer.email,
-                mobile: customer.mobile,
+                ownerName: customer.name || "",
+                email: customer.email || "",
+                mobile: customer.mobile || "",
                 socialLinks: {
                     whatsapp: '',
                     instagram: '',
@@ -49,9 +72,29 @@ function BasicDetails({ customer, setSelectedCategory, setSelectedCustomer }) {
                 addressUrl: "",
                 theme: "#3498db",
                 profilePhoto: null
-            })
+            });
+        } else {
+            setCustomerData({
+                userId: '',
+                name: "",
+                companyUrl: "",
+                ownerName: "",
+                email: "",
+                mobile: "",
+                socialLinks: {
+                    whatsapp: '',
+                    instagram: '',
+                    facebook: ''
+                },
+                about: "",
+                address: "",
+                addressUrl: "",
+                theme: "#3498db",
+                profilePhoto: null
+            });
         }
-    }, [customer])
+    }, [customer]);
+
 
 
     const [errors, setErrors] = useState({});
